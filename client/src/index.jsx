@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 class Welcome extends React.Component {
   render() {
-    return <h1>Hello World from React boilerplate</h1>;
+    return <h1>Test</h1>;
   }
 }
 
