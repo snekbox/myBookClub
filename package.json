@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MMaher25/myBookClub.git"
+    "url": "git+https://github.com/snekbox/myBookClub.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MMaher25/myBookClub/issues"
+    "url": "https://github.com/snekbox/myBookClub.git"
   },
-  "homepage": "https://github.com/MMaher25/myBookClub#readme",
+  "homepage": "https://github.com/snekbox/myBookClub.git#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
