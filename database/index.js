@@ -9,6 +9,15 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, pr
 })
 
 const Model = Sequelize.Model;
+
+class User extends Model {}
+User.init({
+  username: Sequelize.STRING,
+  email: Sequelize.STRING
+  
+})  
+
+
 class Group extends Model {}
 Group.init({
   name: {
@@ -19,11 +28,6 @@ Group.init({
     sequelize,
     modelName: 'group'
   });
-class User extends Model {}
-User.init({
-  
-})  
-
 // sequelize
 //   .authenticate()
 //   .then(() => {
@@ -32,22 +36,3 @@ User.init({
 //   .catch(err => {
 //     console.error('Unable to connect to the database:', err);
 //   });
-// const connection = mysql.createConnection({
-//   host: process.env.HOST || 'localhost',
-//   user: process.env.MASTER_USER || 'root',
-//   port: process.env.PORT || 3306,
-//   password: process.env.DB_PASSWORD || '',
-//   database: process.env.DB_NAME || 'test',
-// });
-
-// const selectAll = (callback) => {
-//   connection.query('SELECT * FROM items', (err, items) => {
-//     if (err) {
-//       callback(err, null);
-//     } else {
-//       callback(null, items);
-//     }
-//   });
-// };
-
-// module.exports.selectAll = selectAll;
