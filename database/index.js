@@ -19,7 +19,10 @@ Group.init({
     sequelize,
     modelName: 'group'
   });
+class User extends Model {}
+User.init({
   
+})  
 
 // sequelize
 //   .authenticate()
