@@ -1,0 +1,44 @@
+#root {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#sidebar {
+  min-height: 1000px;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.title {
+  margin-left: 15px;
+}
+
+.leftbar {
+  margin-left: 0;
+  margin-top: 0;
+  max-width: 250px;
+  position: fixed;
+  padding: 10px;
+  padding-top: 64px;
+  height: 100%;
+  z-index: -1;
+}
+
+.bodygrid {
+  margin-left: 250px;
+  min-height: 1000px;
+  height: 100%;
+}
+
+.groupcard {
+  padding: 10px;
+}
+
+.logo {
+  height: 50px;
+  top: 10px;
+  left: 10px;
+}
