@@ -7,14 +7,28 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, pr
   port: process.env.PORT,
   dialect: 'mysql',
 })
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
+
+const Model = Sequelize.Model;
+class Group extends Model {}
+Group.init({
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    },
+  }, {
+    sequelize,
+    modelName: 'group'
   });
+  
+
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 // const connection = mysql.createConnection({
 //   host: process.env.HOST || 'localhost',
 //   user: process.env.MASTER_USER || 'root',
