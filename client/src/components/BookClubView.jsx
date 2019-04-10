@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Button, Icon, TextInput, Collection, CollectionItem, Card } from 'react-materialize';
+import { Row, Col, Button, Icon, TextInput, Collection, CollectionItem, Card, Pagination } from 'react-materialize';
 const data = require('../../../database/sample-data/sample.js');
 const BookClubView = ( { } ) => (
     console.log(data.json.items[0]),
@@ -22,12 +22,29 @@ const BookClubView = ( { } ) => (
     <div className="bodygrid cyan lighten-5">
     <Row>
         <Col m={6} s={12}>
-            <Card header={<h1>Book Title</h1>}>
-                Here is the standard card with a horizontal image.
+            <Card header={<h1>Club View</h1>}>
+                <h2>Book Being Discussed</h2>
             </Card>
         </Col>
+        <Col>
+            Calendar here
+        </Col>
     </Row>
-       {/* <Row>
+    <div>
+        <Row>
+            <Col s={4}>
+                
+            </Col>
+        </Row>
+        <Row>
+            <Col s={12}>
+                <Collection header="Comments List">
+                </Collection>
+                <Pagination maxButtons={10} />
+            </Col>
+        </Row>
+    </div>
+       {/* <Row> //////// Potential subcomponents
            
            <Col s={6}>
         <Button className="btn waves-effect waves-light" style={{marginRight: '5px'}}> Calendar 
@@ -42,33 +59,33 @@ const BookClubView = ( { } ) => (
         </Button>
            </Col>
        </Row> */}
-       <Row>
+       {/* <Row>
            <Col> 
            <TextInput icon="chat" placeholder="your message here" /> 
            </Col>
-       </Row>
+       </Row> */}
        <Row>
            <Col m={6} s={12}>
-           <Collection>
-           
-           <CollectionItem className="avatar">
-                <img src="https://materializecss.com/images/yuna.jpg" alt="" className="circle" />
+           {/* <Collection>
+            
+            <CollectionItem className="avatar">
+                 <img src="https://materializecss.com/images/yuna.jpg" alt="" className="circle" />
                 <span className="user-name">
-                username
-                </span>
-                <p>
-                Message / Note
-                <br/>
-                date
-                </p>
-                    <Icon>
-                        thumb_up
-                    </Icon>
-                <Icon>
-                    thumb_down
-                </Icon>
-            </CollectionItem>
-           </Collection>
+                 username
+                 </span>
+                 <p>
+                 Message / Note
+                 <br/>
+                 date
+                 </p>
+                     <Icon>
+                         thumb_up
+                     </Icon>
+                 <Icon>
+                     thumb_down
+                 </Icon>
+             </CollectionItem>
+           </Collection> */}
            </Col>
        </Row>
        
