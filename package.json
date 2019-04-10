@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack --config webpack.config.js --mode development --watch",
-    "start": "nodemon server/index.js",
+    "start": "npm run react-dev & npm run nodemon",
+    "nodemon": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
