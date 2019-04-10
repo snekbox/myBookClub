@@ -2,8 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
-const parseString = require('xml2js').parseString;
-const { xml } = require('../database/sample-data/sample.js')
+const { json } = require('../database/sample-data/sample.js')
 
 const app = express();
 
@@ -20,16 +19,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-  parseString(xml, function (err, result) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(result.GoodreadsResponse.search[0].results[0].work);
-      // Author [index].best_book[0].author[0].name[0]
-      // Title [index].best_book[0].title[0]
-      // Publish Year [index].original_publication_year[0]._
-    }
-  });
+  res.send(json.items);
+  // See below for things to store in the database and their relative paths
+  // Title:         json.items[i].volumeInfo.title
+  // Authors:       json.items[i].volumeInfo.authors
+  // Publish Year:  json.items[i].volumeInfo.publishedDate.slice(0,4)
+  // Image:         json.items[i].volumeInfo.imageLinks.thumbnail
+  // Info URL:      json.items[i].volumeInfo.infoLink
+  // Description:   json.items[i].volumeInfo.description
+  // ISBN:          json.items[i].volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier
 })
 
 app.listen(3000, () => {
