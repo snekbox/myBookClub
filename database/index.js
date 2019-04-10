@@ -8,14 +8,14 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, pr
   dialect: 'mysql',
 })
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 const Model = Sequelize.Model;
 
@@ -49,7 +49,6 @@ Group.init({
   });
 User.hasMany(Group);
 Group.belongsTo(User);
-// Group.hasMany(User);
 class Comment extends Model {}
 Comment.init({
   comment: { type: Sequelize.TEXT, allowNull: false, },
@@ -58,17 +57,43 @@ Comment.init({
   modelName: 'comment',
 })
 
+class Note extends Model {}
+Note.init({
+  page: { type: Sequelize.INTEGER, allowNull: false},
+  note: { type: Sequelize.TEXT, allowNull: false}
+}, {
+  sequelize,
+  modelName: 'note'
+})
+Group.hasMany(Comment);
+User.hasMany(Comment);
+Book.hasMany(Comment);
+Comment.belongsTo(Group);
+Comment.belongsTo(User);
+Comment.belongsTo(Book);
+User.hasMany(Note);
+Book.hasMany(Note);
+Note.belongsTo(User);
+Note.belongsTo(Book);
+Book.hasOne(Group);
+Group.belongsTo(Book);
+User.belongsToMany(Group, {through: 'users_groups' });
+Group.belongsToMany(User, {through: 'users_groups' });
+User.belongsToMany(Book, {through: 'users_books'});
+Book.belongsToMany(User, {through: 'users_books'});
+Group.belongsToMany(Book, {through: 'books_groups'});
+Book.belongsToMany(Group, {through: 'books_groups'});
 sequelize.sync()
 
-// User.create({
-//   username: 'quinnmccourt',
-//   email:'quinnmccourt@gmail.com'
-// }).then(results => {
-//   Group.create({
-//     name: `Quinn's Roughnecks`,
-//     userId: results.dataValues.id
-//   })
-// })
+User.create({
+  username: 'quinnmccourt',
+  email:'quinnmccourt@gmail.com'
+}).then(results => {
+  Group.create({
+    name: `Quinn's Roughnecks`,
+    userId: results.dataValues.id
+  })
+})
 
 Group.findAll({
   include: [{
@@ -79,3 +104,11 @@ Group.findAll({
 }).catch((err) => {
   
 });
+
+module.exports = {
+  User,
+  Group,
+  Book,
+  Comment,
+  Note,
+}
