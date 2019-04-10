@@ -3,15 +3,9 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import TopBar from './components/TopBar.jsx'
 import LeftBar from './components/LeftBar.jsx'
-<<<<<<< HEAD
-import BodyGrid from './components/BodyGrid.jsx';
-import BookClubView from './components/BookClubView.jsx';
-const json = require('../../database/sample-data/sample.js');
-import { raw } from 'mysql';
-=======
 import BodyGrid from './components/BodyGrid.jsx'
 import Settings from './components/Settings.jsx'
->>>>>>> d65dcfc02bd09bbd910ab81038e762c993b79c12
+import BookClubView from './components/BookClubView.jsx';
 
 class Landing extends React.Component {
   constructor(props) {
@@ -32,9 +26,11 @@ class Landing extends React.Component {
   renderMain () {
     const { view } = this.state;
     if (view === 'groups') {
-      return <BodyGrid />
+      return <BodyGrid chooseView={ this.chooseView }/>
     } else if (view === 'settings') {
       return <Settings />
+    } else if (view === 'club view') {
+      return <BookClubView />
     }
   }
 
@@ -47,16 +43,10 @@ class Landing extends React.Component {
     return (
     <div>
       <LeftBar />
-<<<<<<< HEAD
-      <TopBar />
-      {/* <BodyGrid /> */}
-      <BookClubView />
-=======
       <TopBar chooseView={this.chooseView} />
       {
         this.renderMain()
       }
->>>>>>> d65dcfc02bd09bbd910ab81038e762c993b79c12
     </div>
     )
     // Nav bar

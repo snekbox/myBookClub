@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, TextInput, Collection, CollectionItem, Card, Pagination, DatePicker } from 'react-materialize';
-const data = require('../../../database/sample-data/sample.js');
+//const data = require('../../../database/sample-data/sample.js');
 const BookClubView = ( { } ) => (
     //0. renders this component when a book club is clicked
     //1.on render, shows book title on top center of page
