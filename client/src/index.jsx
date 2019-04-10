@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import TopBar from './components/TopBar.jsx'
 import LeftBar from './components/LeftBar.jsx'
-import BodyGrid from './components/BodyGrid.jsx'
+import BodyGrid from './components/BodyGrid.jsx';
+import BookClubView from './components/BookClubView.jsx';
+const json = require('../../database/sample-data/sample.js');
+import { raw } from 'mysql';
 
 class Landing extends React.Component {
   constructor(props) {
@@ -22,7 +25,8 @@ class Landing extends React.Component {
     <div>
       <LeftBar />
       <TopBar />
-      <BodyGrid />
+      {/* <BodyGrid /> */}
+      <BookClubView />
     </div>
     )
     // Nav bar
