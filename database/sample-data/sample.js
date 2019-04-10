@@ -1,4 +1,117 @@
+
 module.exports.json = {
+    "mockData": {
+        "bookClubs": [{ 
+            "hungry_catterpillars book club":{
+                "id":123123213,
+                "clubOwner":"hungry_catterpillar",
+                    "currentBook": "Arctic expeditions for dummies",
+                    "allComments":{
+                        "user2": "wow thats so CRAZY",
+                        "user7": "I COMPLTELY AGREE wowza"
+                },
+                "nextMeeting": "Tuesday, Jan. 12th",
+            }
+        }, { 
+            "The amazing book club":{
+                "id":123123,
+                "clubOwner": "Joseph ballin",
+                "currentBook": "8 Easy Ways to cook plastic",
+                },
+                "nextMeeting": "Wednesday, Month the 18th",
+        }, { 
+            "BOOK CLUB data":{
+                "id":8675309,
+                "clubOwner": "Agent_Z",
+                "currentBook": "Monster Slaying for Beginners",
+                "allComments":[
+                    {"user5": "wow thats so CRAZY"},
+                    {"user6": "Wow this is an incredible app im so glad I chose this great app"}
+                ],
+                "nextMeeting": "Friday, Jan. 17th",
+                },
+        }, { 
+            "the friendly book club":{
+                "id": 4314123123123,
+                "clubOwner": "Doctor_Phil",
+                "currentBook": "His name was Robert Paulsen",
+                "allComments":[
+                    {"user8": "wow thats so CRAZY"},
+                    {"user2": "then what!"}
+                ],
+                "nextMeeting": "tuesday, june 2nd",
+                },
+            
+        }, { 
+            "book club five":{
+                "id": 121111,
+                "currentOwner": "alaskan_moose_whisperer",
+                "currentBook": "MORTY LOOK IM A CURRENT BOOK",
+                "allComments":[
+                    {"user2": "yee haw"},
+                    {"user7": "Aw heck yes"}
+                ],
+                "nextMeeting": "friday, aug. 13th",
+                },
+            
+        }, { 
+            "the BOOOOOOK club":{
+                "id": 12442134323321111,
+                "currentOwner": "Captain_Crunchy",
+                "currentBook": "Yeeeeeeee",
+                "allComments":[
+                    {"user2": "WHAT NO WAY"},
+                    {"user7": "OH YES WAY HAHA LOL JK"}
+                ],
+                "nextMeeting": "sunday, feb. 12th"
+                },
+            
+        }, { 
+            "clubName12413212321":{
+                "id": 87654,
+                "clubOwner": "the_illest_imaginable",
+                "currentBook": "dummies",
+                "allComments":[
+                    {"user2": "wow thats so CRAZY"},
+                    {"user7": "I COMPLTELY AGREE wowza"},
+                ],
+                "nextMeeting": "Tuesday, Jan. 12th",
+            }
+        }, { 
+            "the best book club in history":{
+                "id": 1245324213,
+                "clubOwner": "Quinn IV",
+                "currentBook": "expeditions",
+                "allComments":{
+                    "user2": "wow thats so CRAZY",
+                    "user7": "I COMPLTELY AGREE wowza"
+                },
+                "nextMeeting": "Tuesday, Jan. 12th",
+            }
+        }, { 
+            "the breakfast book club":{
+                "id": 234,
+                "clubOwner": "The_swamp_mosquito",
+                "currentBook": "Arctic",
+                "allComments":{
+                    "user2": "wow thats so CRAZY",
+                    "user7": "23409u0239582034u0jatdsihkfsh awesome"
+                },
+                "nextMeeting": "Tuesday, Feb. 18th",
+            }
+        }, { 
+            "Quinns awesome book club":{
+                "id":12312312,
+                "clubOwner": "Quinn",
+                "currentBook": "Tundra Traversal on Stilts",
+                "allComments":{
+                    "user2": "too cool for school",
+                    "user7": "impeccably stated"
+                },
+                "nextMeeting": "Tuesday, Jan. 14th",
+            }
+        },]
+    },
     "kind": "books#volumes",
     "totalItems": 1598,
     "items": [
