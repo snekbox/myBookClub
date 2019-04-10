@@ -94,12 +94,20 @@ sequelize.sync()
 //   })
 // })
 
-Group.findAll({
-  include: [{
-    model: User
-  }]
-}).then((result) => {
-  console.log(result);
-}).catch((err) => {
+// Group.findAll({
+//   include: [{
+//     model: User
+//   }]
+// }).then((result) => {
+//   console.log(result);
+// }).catch((err) => {
   
-});
+// });
+
+module.exports = {
+  User,
+  Group,
+  Book,
+  Comment,
+  Note,
+}
