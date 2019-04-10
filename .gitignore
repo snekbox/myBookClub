@@ -1,8 +1,4 @@
 node_modules
 /client/dist/bundle.js
-<<<<<<< HEAD
-.env
-=======
 .env
 .vscode
->>>>>>> e9da6dadc450bd2d3bdca4d1a34f6946a53a0980

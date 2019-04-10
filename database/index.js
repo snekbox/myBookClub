@@ -8,31 +8,74 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, pr
   dialect: 'mysql',
 })
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 const Model = Sequelize.Model;
 
 class User extends Model {}
 User.init({
-  username: Sequelize.STRING,
-  email: Sequelize.STRING
-  
+  username: { type: Sequelize.STRING, allowNull: false,  },
+  email: {type: Sequelize.STRING, allowNull: false, },
+}, {
+  sequelize,
+  modelName: 'user',
 })  
 
+class Book extends Model {}
+Book.init({
+  title: { type: Sequelize.STRING, allowNull: false, },
+  author: { type: Sequelize.STRING, allowNull: false, },
+  published: { type: Sequelize.INTEGER(4), allowNull: false, },
+  isbn: {type: Sequelize.INTEGER(13), allowNull: true,},
+  urlInfo: {type: Sequelize.STRING, underscored: true, },
+}, {
+  sequelize,
+  modelName: 'book',
+})
 
 class Group extends Model {}
 Group.init({
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    },
+  name: { type: Sequelize.STRING, allowNull: false, },
   }, {
     sequelize,
-    modelName: 'group'
+    modelName: 'group',
   });
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Connection has been established successfully.');
+User.hasMany(Group);
+Group.belongsTo(User);
+// Group.hasMany(User);
+class Comment extends Model {}
+Comment.init({
+  comment: { type: Sequelize.TEXT, allowNull: false, },
+}, {
+  sequelize,
+  modelName: 'comment',
+})
+
+sequelize.sync()
+
+// User.create({
+//   username: 'quinnmccourt',
+//   email:'quinnmccourt@gmail.com'
+// }).then(results => {
+//   Group.create({
+//     name: `Quinn's Roughnecks`,
+//     userId: results.dataValues.id
 //   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
+// })
+
+Group.findAll({
+  include: [{
+    model: User
+  }]
+}).then((result) => {
+  console.log(result);
+}).catch((err) => {
+  
+});
