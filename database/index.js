@@ -49,7 +49,6 @@ Group.init({
   });
 User.hasMany(Group);
 Group.belongsTo(User);
-// Group.hasMany(User);
 class Comment extends Model {}
 Comment.init({
   comment: { type: Sequelize.TEXT, allowNull: false, },
@@ -76,6 +75,8 @@ User.hasMany(Note);
 Book.hasMany(Note);
 Note.belongsTo(User);
 Note.belongsTo(Book);
+Book.hasOne(Group);
+Group.belongsTo(Book);
 User.belongsToMany(Group, {through: 'users_groups' });
 Group.belongsToMany(User, {through: 'users_groups' });
 User.belongsToMany(Book, {through: 'users_books'});
@@ -84,25 +85,25 @@ Group.belongsToMany(Book, {through: 'books_groups'});
 Book.belongsToMany(Group, {through: 'books_groups'});
 sequelize.sync()
 
-// User.create({
-//   username: 'quinnmccourt',
-//   email:'quinnmccourt@gmail.com'
-// }).then(results => {
-//   Group.create({
-//     name: `Quinn's Roughnecks`,
-//     userId: results.dataValues.id
-//   })
-// })
+User.create({
+  username: 'quinnmccourt',
+  email:'quinnmccourt@gmail.com'
+}).then(results => {
+  Group.create({
+    name: `Quinn's Roughnecks`,
+    userId: results.dataValues.id
+  })
+})
 
-// Group.findAll({
-//   include: [{
-//     model: User
-//   }]
-// }).then((result) => {
-//   console.log(result);
-// }).catch((err) => {
+Group.findAll({
+  include: [{
+    model: User
+  }]
+}).then((result) => {
+  console.log(result);
+}).catch((err) => {
   
-// });
+});
 
 module.exports = {
   User,
