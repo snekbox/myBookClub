@@ -1,9 +1,14 @@
 import React from 'react';
 import { Navbar, NavItem, Icon, Dropdown, Divider, Button } from 'react-materialize'
 
-const TopBar = ({  }) => (
+const TopBar = ({ chooseView }) => (
   <div>
-    <Navbar brand={<img src='../images/logo.png' className="logo" />} alignLinks="right" className="light-blue">
+    <Navbar brand={<img src='../images/logo.png' className="logo" onClick={() => chooseView('groups')} />} alignLinks="right" className="light-blue">
+      <NavItem onClick={() => chooseView('groups')} >
+        <Icon>
+          home
+        </Icon>
+      </NavItem>
       <NavItem href="/">
         <Icon>
           search
@@ -19,7 +24,7 @@ const TopBar = ({  }) => (
           video_call
         </Icon>
       </NavItem>
-      <NavItem href="/">
+      <NavItem onClick={() => chooseView('settings')} >
         <Icon>
           settings
         </Icon>

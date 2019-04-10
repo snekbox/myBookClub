@@ -4,25 +4,46 @@ import axios from 'axios';
 import TopBar from './components/TopBar.jsx'
 import LeftBar from './components/LeftBar.jsx'
 import BodyGrid from './components/BodyGrid.jsx'
+import Settings from './components/Settings.jsx'
 
 class Landing extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      view: 'groups',
+    }
+
+    this.renderMain = this.renderMain.bind(this);
+    this.chooseView = this.chooseView.bind(this);
   }
 
   componentDidMount() {
     // Initial loading logic will go here
   }
 
+  renderMain () {
+    const { view } = this.state;
+    if (view === 'groups') {
+      return <BodyGrid />
+    } else if (view === 'settings') {
+      return <Settings />
+    }
+  }
+
+  chooseView (view) {
+    this.setState({view})
+  }
+
   render() {
-    const {} = this.state;  // destructure state here
+    const { } = this.state;  // destructure state here
     return (
     <div>
       <LeftBar />
-      <TopBar />
-      <BodyGrid />
+      <TopBar chooseView={this.chooseView} />
+      {
+        this.renderMain()
+      }
     </div>
     )
     // Nav bar
