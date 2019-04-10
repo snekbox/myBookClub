@@ -60,13 +60,28 @@ Comment.init({
 
 class Note extends Model {}
 Note.init({
-  page: {type: Sequelize.INTEGER, allowNull: false},
+  page: { type: Sequelize.INTEGER, allowNull: false},
   note: { type: Sequelize.TEXT, allowNull: false}
+}, {
+  sequelize,
+  modelName: 'note'
 })
+Group.hasMany(Comment);
+User.hasMany(Comment);
+Book.hasMany(Comment);
+Comment.belongsTo(Group);
+Comment.belongsTo(User);
+Comment.belongsTo(Book);
 User.hasMany(Note);
 Book.hasMany(Note);
 Note.belongsTo(User);
 Note.belongsTo(Book);
+User.belongsToMany(Group, {through: 'users_groups' });
+Group.belongsToMany(User, {through: 'users_groups' });
+User.belongsToMany(Book, {through: 'users_books'});
+Book.belongsToMany(User, {through: 'users_books'});
+Group.belongsToMany(Book, {through: 'books_groups'});
+Book.belongsToMany(Group, {through: 'books_groups'});
 sequelize.sync()
 
 // User.create({
