@@ -8,14 +8,14 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, pr
   dialect: 'mysql',
 })
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// sequelize
+//   .authenticate()
+//   .then(() => {
+//     console.log('Connection has been established successfully.');
+//   })
+//   .catch(err => {
+//     console.error('Unable to connect to the database:', err);
+//   });
 
 const Model = Sequelize.Model;
 
@@ -58,6 +58,15 @@ Comment.init({
   modelName: 'comment',
 })
 
+class Note extends Model {}
+Note.init({
+  page: {type: Sequelize.INTEGER, allowNull: false},
+  note: { type: Sequelize.TEXT, allowNull: false}
+})
+User.hasMany(Note);
+Book.hasMany(Note);
+Note.belongsTo(User);
+Note.belongsTo(Book);
 sequelize.sync()
 
 // User.create({
