@@ -1,6 +1,5 @@
 
-module.exports.json = {
-    "mockData": {
+   module.exports.bookClubs = { "mockData": {
         "bookClubs": [{ 
             "hungry_catterpillars book club":{
                 "id":123123213,
@@ -17,8 +16,8 @@ module.exports.json = {
                 "id":123123,
                 "clubOwner": "Joseph ballin",
                 "currentBook": "8 Easy Ways to cook plastic",
-                },
                 "nextMeeting": "Wednesday, Month the 18th",
+            },
         }, { 
             "BOOK CLUB data":{
                 "id":8675309,
@@ -111,7 +110,9 @@ module.exports.json = {
                 "nextMeeting": "Tuesday, Jan. 14th",
             }
         },]
-    },
+    }
+   },
+module.exports.json = {
     "kind": "books#volumes",
     "totalItems": 1598,
     "items": [
@@ -1000,4 +1001,4 @@ module.exports.json = {
             }
         }
     ]
-}
+};
