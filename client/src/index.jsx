@@ -5,11 +5,8 @@ import TopBar from './components/TopBar.jsx'
 import LeftBar from './components/LeftBar.jsx'
 import BodyGrid from './components/BodyGrid.jsx'
 import Settings from './components/Settings.jsx'
-<<<<<<< HEAD
 import LogIn from './components/LogIn.jsx'
-=======
 import BookClubView from './components/BookClubView.jsx';
->>>>>>> b151268f0f710898da3607e66820ff0c277f48d6
 
 class Landing extends React.Component {
   constructor(props) {
