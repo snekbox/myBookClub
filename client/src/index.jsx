@@ -7,6 +7,7 @@ import BodyGrid from './components/BodyGrid.jsx'
 import Settings from './components/Settings.jsx'
 import LogIn from './components/LogIn.jsx'
 import BookClubView from './components/BookClubView.jsx';
+const { bookClubs } = require('../../database/sample-data/sample.js');
 
 class Landing extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Landing extends React.Component {
     this.state = {
       view: 'groups',
       loggedIn: false,
+      bookClubs: bookClubs,
     }
 
     this.renderMain = this.renderMain.bind(this);
@@ -28,8 +30,9 @@ class Landing extends React.Component {
 
   renderMain () {
     const { view } = this.state;
+    const { mockData } = this.state;
     if (view === 'groups') {
-      return <BodyGrid chooseView={ this.chooseView }/>
+      return <BodyGrid chooseView={ this.chooseView}/>
     } else if (view === 'settings') {
       return <Settings />
     } else if (view === 'club view') {
@@ -47,7 +50,8 @@ class Landing extends React.Component {
   }
 
   render() {
-    const {loggedIn } = this.state;  // destructure state here
+    const {loggedIn, bookClubs } = this.state;  // destructure state here
+    console.log(bookClubs);
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />
     } else {
