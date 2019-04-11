@@ -59,7 +59,24 @@ const addOrFindBook = (isbn, title, author, published, description, urlInfo, ima
 }
 
 const getUserGroups = (userId) => {
-
+    return UserGroup.findAll({
+        attributes: [],
+        where: {
+            userId: userId,
+        },
+        include: [{ 
+                model: Group, 
+                include: [Book],
+            },
+        ]
+    }).then((result) => {
+        let groups = result.map(group => {
+            return group.group
+        })
+        return groups; 
+    }).catch((err) => {
+        return err;
+    });
 }
 
 const addUserToGroup = (userId, groupId) => {
