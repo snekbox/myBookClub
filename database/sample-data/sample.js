@@ -1,4 +1,68 @@
-module.exports.json = {
+
+module.exports.bookClubs = [
+    {
+        id: 123123213,
+        name: "hungry_catterpillars book club",
+        owner: "hungry_catterpillar",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 123123413,
+        name: "The amazing book club",
+        owner: "Joseph ballin",
+        nextMeeting: "Wednesday, Month the 18th",
+    },
+    {
+        id: 123143213,
+        name: "BOOK CLUB data",
+        owner: "Agent_Z",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 123423213,
+        name: "the friendly book club",
+        owner: "Doctor_Phil",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 143123213,
+        name: "book club five",
+        owner: "alaskan_moose_whisperer",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 123123613,
+        name: "the BOOOOOOK club",
+        owner: "Captain_Crunchy",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 123153213,
+        name: "clubName12413212321",
+        owner: "the_illest_imaginable",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 125123213,
+        name: "the best book club in history",
+        owner: "Quinn IV",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 123123283,
+        name: "the breakfast book club",
+        owner: "The_swamp_mosquito",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+    {
+        id: 183123213,
+        name: "Quinns awesome book club",
+        owner: "Quinn",
+        nextMeeting: "Tuesday, Jan. 12th",
+    },
+]
+
+module.exports.googleBooksApiData = {
     "kind": "books#volumes",
     "totalItems": 1598,
     "items": [
@@ -887,4 +951,4 @@ module.exports.json = {
             }
         }
     ]
-}
+};

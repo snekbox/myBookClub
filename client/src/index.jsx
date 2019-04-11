@@ -7,6 +7,7 @@ import BodyGrid from './components/BodyGrid.jsx'
 import Settings from './components/Settings.jsx'
 import LogIn from './components/LogIn.jsx'
 import BookClubView from './components/BookClubView.jsx';
+import { bookClubs, googleBooksApiData } from '../../database/sample-data/sample.js';
 
 class Landing extends React.Component {
   constructor(props) {
@@ -15,6 +16,10 @@ class Landing extends React.Component {
     this.state = {
       view: 'groups',
       loggedIn: false,
+      bookClubs: bookClubs,
+      sampleData: googleBooksApiData.items,
+      currentClub: bookClubs[0],
+      currentBook: googleBooksApiData.items[0],
     }
 
     this.renderMain = this.renderMain.bind(this);
@@ -27,13 +32,13 @@ class Landing extends React.Component {
   }
 
   renderMain () {
-    const { view } = this.state;
+    const { view, bookClubs, sampleData, currentBook, currentClub } = this.state;
     if (view === 'groups') {
-      return <BodyGrid chooseView={ this.chooseView }/>
+      return <BodyGrid chooseView={ this.chooseView} clubs={bookClubs} books={sampleData} />
     } else if (view === 'settings') {
-      return <Settings />
+      return <Settings clubs={bookClubs} />
     } else if (view === 'club view') {
-      return <BookClubView />
+      return <BookClubView club={currentClub} book={currentBook} />
     }
   }
 
@@ -47,13 +52,13 @@ class Landing extends React.Component {
   }
 
   render() {
-    const {loggedIn } = this.state;  // destructure state here
+    const {loggedIn, bookClubs, sampleData } = this.state;  // destructure state here
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />
     } else {
       return (
       <div>
-        <LeftBar />
+        <LeftBar book={sampleData[0]} club={bookClubs[0]}/>
         <TopBar chooseView={this.chooseView} />
         {
           this.renderMain()
