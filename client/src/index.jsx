@@ -59,7 +59,7 @@ class Landing extends React.Component {
       return (
       <div>
         <LeftBar book={sampleData[0]} club={bookClubs[0]}/>
-        <TopBar chooseView={this.chooseView} />
+        <TopBar chooseView={this.chooseView} sampleData={sampleData}/>
         {
           this.renderMain()
         }

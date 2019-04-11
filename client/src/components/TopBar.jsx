@@ -1,7 +1,7 @@
 import React from 'react';
-import { Navbar, NavItem, Icon, Dropdown, Divider, Button } from 'react-materialize'
+import { Navbar, NavItem, Icon, Dropdown, Divider, Button, Modal, TextInput, Textarea, Card } from 'react-materialize'
 
-const TopBar = ({ chooseView }) => (
+const TopBar = ({ chooseView, sampleData }) => (
   <div>
     <Navbar brand={<img src='../images/logo.png' className="logo" onClick={() => chooseView('groups')} />} alignLinks="right" className="light-blue">
       <NavItem onClick={() => chooseView('groups')} >
@@ -14,11 +14,29 @@ const TopBar = ({ chooseView }) => (
           search
         </Icon>
       </NavItem>
-      <NavItem href="/">
-        <Icon>
-          add_circle_outline
-        </Icon>
-      </NavItem>
+
+      <Modal header="Create a new club" trigger={ 
+      <NavItem> 
+        <Icon>add_circle_outline</Icon> 
+        </NavItem> 
+      }>
+        <h6> club owner: current user </h6>
+          <Modal header="select a book:" trigger={ <Button> Select a book! </Button> }>
+          <TextInput placeholder="search for books"></TextInput>
+            {
+              sampleData.map((book) =>{
+                  return <Card horizontal header={ book.volumeInfo.title } onClick={/** selects book for outer modal*/}>
+                   <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
+                   {book.volumeInfo.description}
+                   </Card>
+                })
+              }
+          </Modal>
+        <TextInput placeholder="Club Name" />
+        <Textarea placeholder="Additional data about club here" />
+        <Button onClick={ submitClub }>Create Club</Button>
+      </Modal>
+
       <NavItem href="/">
         <Icon>
           video_call
