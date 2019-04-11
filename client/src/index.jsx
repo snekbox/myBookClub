@@ -48,7 +48,7 @@ class Landing extends React.Component {
   }
 
   handleLogIn () {
-    axios({ url: '/auth/google', headers: { 'Access-Control-Allow-Origin': "*" }})
+    axios.get('/auth/google')
     .then((userObj) => {
       console.log(userObj)
       this.setState({

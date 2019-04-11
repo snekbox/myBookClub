@@ -10,12 +10,15 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+app.get('/auth/google', 
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
+
 
 app.get('/', (req, res) => {
   items.selectAll((err, data) => {
@@ -27,14 +30,10 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/auth/google', 
-  passport.authenticate('google', { scope: ['email', 'profile'] })
-);
-
 app.get('/auth/google/redirect',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.send(req.user);
+    res.json(req.user);
   }
 )
 

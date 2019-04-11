@@ -9,7 +9,7 @@ passport.use(new GoogleStrategy({
   callbackURL: "/auth/google/redirect"
 },
   function (accessToken, refreshToken, profile, done) {
-    verifyUser(profile.emails[0].value, profile.id)
+    verifyUser(profile.emails[0].value, `${profile.name.givenName} ${profile.name.familyName}`)
     .then((result) => {
       return done(null, result[0]);
     }).catch((err) => {
