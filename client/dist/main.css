@@ -1,5 +1,4 @@
 #root {
-  max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -14,12 +13,13 @@
 
 .title {
   margin-left: 15px;
+  font-weight: 900;
 }
 
 .leftbar {
   margin-left: 0;
   margin-top: 0;
-  max-width: 250px;
+  max-width: 280px;
   position: fixed;
   padding: 10px;
   padding-top: 64px;
@@ -28,7 +28,7 @@
 }
 
 .bodygrid {
-  margin-left: 250px;
+  margin-left: 280px;
   min-height: 1000px;
   height: 100%;
 }
@@ -45,4 +45,8 @@
 
 .cardtitle {
   text-align: center;
+}
+
+.book {
+  max-width: 80px;
 }
