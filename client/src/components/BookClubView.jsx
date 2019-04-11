@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, TextInput, Collection, CollectionItem, Card, Pagination, DatePicker } from 'react-materialize';
 //const data = require('../../../database/sample-data/sample.js');
-const BookClubView = ( { } ) => (
+const BookClubView = ( { club, book } ) => (
     //0. renders this component when a book club is clicked
     //1.on render, shows book title on top center of page
     //2.on render, shows picture of book in top left of page
@@ -20,9 +20,10 @@ const BookClubView = ( { } ) => (
     <div className="bodygrid cyan lighten-5">
     <Row>
         <Col m={6} s={12}>
-            <Card header={<h1>Club View</h1>}>
-                <h2>Book Being Discussed</h2>
-                <article> Book info here </article>
+            <Card header={<h3>{club.name}</h3>}>
+                <h4>{book.volumeInfo.title}</h4>
+                <img src={book.volumeInfo.imageLinks.thumbnail} />
+                <article> {book.volumeInfo.description} </article>
             </Card>
         </Col>
         <Col>
