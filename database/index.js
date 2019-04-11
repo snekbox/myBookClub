@@ -1,6 +1,6 @@
 // const mysql = require('mysql');
 const Sequelize = require('sequelize');
-require("dotenv").config(); //required dotenv for access to environmental variables
+require('dotenv').config(); // required dotenv for access to environmental variables
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.MASTER_USER, process.env.DB_PASSWORD, {
   host: process.env.HOST,
@@ -67,6 +67,9 @@ Note.init({
   sequelize,
   modelName: 'note'
 })
+const UserGroup = sequelize.define('users_groups');
+const UserBook = sequelize.define('users_books');
+const BookGroup = sequelize.define('books_groups');
 Group.hasMany(Comment);
 User.hasMany(Comment);
 Book.hasMany(Comment);
@@ -85,7 +88,15 @@ User.belongsToMany(Book, {through: 'users_books'});
 Book.belongsToMany(User, {through: 'users_books'});
 Group.belongsToMany(Book, {through: 'books_groups'});
 Book.belongsToMany(Group, {through: 'books_groups'});
-sequelize.sync()
+UserGroup.belongsTo(User);
+UserGroup.belongsTo(Group);
+User.hasMany(UserGroup);
+Group.hasMany(UserGroup);
+BookGroup.belongsTo(Book);
+BookGroup.belongsTo(Group);
+Book.hasMany(BookGroup);
+Group.hasMany(BookGroup);
+sequelize.sync();
 
 
 module.exports = {
@@ -94,4 +105,7 @@ module.exports = {
   Book,
   Comment,
   Note,
+  UserGroup,
+  UserBook,
+  BookGroup,
 }
