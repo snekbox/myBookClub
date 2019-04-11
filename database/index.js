@@ -32,9 +32,11 @@ class Book extends Model {}
 Book.init({
   title: { type: Sequelize.STRING, allowNull: false, },
   author: { type: Sequelize.STRING, allowNull: false, },
-  published: { type: Sequelize.INTEGER(4), allowNull: false, },
-  isbn: {type: Sequelize.INTEGER(13), allowNull: true,},
+  published: { type: Sequelize.STRING, allowNull: false, },
+  isbn: {type: Sequelize.STRING, allowNull: true,},
   urlInfo: {type: Sequelize.STRING, underscored: true, },
+  description: {type: Sequelize.TEXT},
+  image: {type: Sequelize.TEXT},
 }, {
   sequelize,
   modelName: 'book',
@@ -85,25 +87,6 @@ Group.belongsToMany(Book, {through: 'books_groups'});
 Book.belongsToMany(Group, {through: 'books_groups'});
 sequelize.sync()
 
-// User.create({
-//   username: 'quinnmccourt',
-//   email:'quinnmccourt@gmail.com'
-// }).then(results => {
-//   Group.create({
-//     name: `Quinn's Roughnecks`,
-//     userId: results.dataValues.id
-//   })
-// })
-
-// Group.findAll({
-//   include: [{
-//     model: User
-//   }]
-// }).then((result) => {
-//   console.log(result);
-// }).catch((err) => {
-  
-// });
 
 module.exports = {
   User,
