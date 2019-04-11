@@ -2,9 +2,18 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
-const { json } = require('../database/sample-data/sample.js')
+const { json } = require('../database/sample-data/sample.js');
+const passport = require('passport');
+const passportSetup = require('./config/passport-setup');
+const cors = require('cors');
+
 
 const app = express();
+
+app.use(cors());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
@@ -17,6 +26,17 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+app.get('/auth/google', 
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+app.get('/auth/google/redirect',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.send(req.user);
+  }
+)
 
 app.get('/test', (req, res) => {
   res.send(json.items);

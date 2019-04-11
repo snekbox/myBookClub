@@ -29,6 +29,11 @@ const TopBar = ({ chooseView }) => (
           settings
         </Icon>
       </NavItem>
+      <NavItem onClick={() => chooseView('settings')} >
+        <Icon>
+          logout
+        </Icon>
+      </NavItem>
     </Navbar>
   </div>
 );

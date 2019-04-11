@@ -20,6 +20,7 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      user: {},
     }
 
     this.renderMain = this.renderMain.bind(this);
@@ -46,9 +47,17 @@ class Landing extends React.Component {
     this.setState({view})
   }
 
-  handleLogIn (googleResponse) {
-    this.setState({loggedIn: true});
-    console.log(googleResponse);
+  handleLogIn () {
+    axios({ url: '/auth/google', headers: { 'Access-Control-Allow-Origin': "*" }})
+    .then((userObj) => {
+      console.log(userObj)
+      this.setState({
+        user: userObj,
+        loggedIn: true,
+      })
+    }).catch((err) => {
+      console.error(err)
+    });
   }
 
   render() {
