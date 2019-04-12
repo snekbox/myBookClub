@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, NavItem, Icon, Dropdown, Divider, Button, Modal, TextInput, Textarea, Card } from 'react-materialize'
 
-const TopBar = ({ chooseView, sampleData }) => (
+const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, bookSearchResults }) => (
   <div>
     <Navbar brand={<img src='../images/logo.png' className="logo" onClick={() => chooseView('groups')} />} alignLinks="right" className="light-blue">
       <NavItem onClick={() => chooseView('groups')} >
@@ -22,15 +22,16 @@ const TopBar = ({ chooseView, sampleData }) => (
       }>
         <h6> club owner: current user </h6>
           <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
-          <TextInput placeholder="search for books"></TextInput>
+          <TextInput className="bookSearchInput" placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
             {
-              sampleData.map((book) =>{
-                  return <Card horizontal header={ book.volumeInfo.title }>
-                   <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
-                   {book.volumeInfo.description}
-                   </Card>
-                })
+              // sampleData.map((book) =>{
+              //     return <Card horizontal header={ book.volumeInfo.title }>
+              //      <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
+              //      {book.volumeInfo.description}
+              //      </Card>
+              //  })
               }
+              <Button title="Search" onClick={ ()=>{ handleBookSearchSubmit() } }/>
           </Modal>
         <TextInput placeholder="Club Name" />
         <Textarea placeholder="Additional data about club here" />

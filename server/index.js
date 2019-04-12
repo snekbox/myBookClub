@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
-const { json } = require('../database/sample-data/sample.js')
+const { json, googleBooksApiData } = require('../database/sample-data/sample.js')
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-  res.send(json.items);
+  res.json(googleBooksApiData); //sending back book data for book club creation test --Sam
   // See below for things to store in the database and their relative paths
   // Title:         json.items[i].volumeInfo.title
   // Authors:       json.items[i].volumeInfo.authors
