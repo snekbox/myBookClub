@@ -20,7 +20,7 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
-      bookSearchResults: null, // result that bookSearch yields, for use in choosing a book when creating a bookClub
+      bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
       bookSearchInput: '', //create function below which handles input on change in text box, changes bookSearchInput
     }
 
@@ -60,44 +60,43 @@ class Landing extends React.Component {
 
 
 
-  handleBookSearchInput (e) {
-    //possible throttling of api calls here, when a few letters have been input 
-    //to help users pick books before they finish typing an entire book name
-    this.setState({
-      bookSearchInput: e.target.value,
-    })
-  }
- 
+  
   bookSearch (bookSearchQuery) { //grabs book data on bookSearch, {title, image, description}
-    //sends get request to server
-    axios.get('/test') //param setting issues so I'm gonna get all data for now and filter in client
-    .then((bookSearchResults)=>{
-      console.log('bookSearchQuery: ', bookSearchQuery, 'bookSearchResults: ', bookSearchResults);
-
-
-        this.setState({
-          bookSearchResults: bookSearchResults.data.items, //sets state to search results
-        })
-        console.log(this.state.bookSearchResults);
+  //sends get request to server
+  axios.get('/test') //param setting issues so I'm gonna get all data for now and filter in client
+  .then((bookSearchResults)=>{
+    this.setState({
+      bookSearchResults: bookSearchResults.data.items.filter(book => book.volumeInfo.title.toUpperCase().includes(bookSearchQuery.toUpperCase())), 
+      //sets state to search results, needs to be changed to search in second axios argument
+      //when I figure that out
     })
-    .catch((err)=>{
-      console.log(err, 'error line 85 index.jsx');
-      //console.log('Server responded with error');
-    })
-  }
+  })
+  .catch((err)=>{
+    console.log("error line 82 index.jsx: server sent back bad data from google API");
+    //console.log('Server responded with error');
+  })
+}
 
-  handleBookSearchSubmit() {
-    //this is where bookSearch will be called
-    //console.log(this.state.bookSearchInput, 'bookSearchSubmit');
-    this.bookSearch(this.state.bookSearchInput) //this should change the state to the results of 
-    //a get request for books matching query
-  }
+//responds to user typing input in 'select a book' box in + modal
+handleBookSearchInput (e) {
+  //possible throttling of api calls here, when a few letters have been input 
+  //to help users pick books before they finish typing an entire book name
+  this.setState({
+    bookSearchInput: e.target.value,
+  })
+}
+
+//responds to user clicking search button
+handleBookSearchSubmit() {
+  this.bookSearch(this.state.bookSearchInput) //this should change the state to the results of 
+  //a get request to google api for books matching query
+}
 
 
-  // addBookClub (bookClubName, currentBookInfo) { //current book info from bookSearch function
-  //   const bookClub = {};
-  //   bookClub.name = bookClubName;
-  //   bookClub.currentBookInfo = currentBookInfo;
+// addBookClub (bookClubName, currentBookInfo) { //current book info from bookSearch function
+//   const bookClub = {};
+//   bookClub.name = bookClubName;
+//   bookClub.currentBookInfo = currentBookInfo;
     
   //   //adds bookClub to database, sends back: id, name, owner, nextMeeting, currentBook, description, image
 

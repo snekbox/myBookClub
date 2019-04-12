@@ -23,15 +23,15 @@ const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, boo
         <h6> club owner: current user </h6>
           <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
           <TextInput className="bookSearchInput" placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
+          <Button title="Search" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
             {
-              // sampleData.map((book) =>{
-              //     return <Card horizontal header={ book.volumeInfo.title }>
-              //      <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
-              //      {book.volumeInfo.description}
-              //      </Card>
-              //  })
+              bookSearchResults.map((book) =>{
+                  return <Card horizontal header={ book.volumeInfo.title }>
+                   <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
+                   {book.volumeInfo.description}
+                   </Card>
+               })
               }
-              <Button title="Search" onClick={ ()=>{ handleBookSearchSubmit() } }/>
           </Modal>
         <TextInput placeholder="Club Name" />
         <Textarea placeholder="Additional data about club here" />
