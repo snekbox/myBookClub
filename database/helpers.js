@@ -145,12 +145,33 @@ const getGroupBooks = (groupId) => {
     });
 }
 
-const addComment = (userId, groupId, bookId) => {
-
+const addComment = (userId, groupId, bookId, comment) => {
+    return Comment.create({
+        comment: comment,
+        userId: userId,
+        groupId: groupId,
+        bookId, bookId,
+    }).then((result) => {
+        return result;
+    }).catch((err) => {
+        return err;
+    });
 }
 
 const getAllComments = (groupId, bookId) => {
-
+    return Comment.findAll({
+        where: {
+            groupId: groupId,
+            bookId: bookId,
+        },
+        include: [
+            {model: User}
+        ]
+    }).then((result) => {
+        return result;
+    }).catch((err) => {
+        return err;
+    });
 }
 module.exports = {
     getUserById,
