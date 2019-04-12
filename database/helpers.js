@@ -3,6 +3,14 @@ const {User, Group, Book, Comment, Note, BookGroup, UserBook, UserGroup} = requi
 //Check or Add new user to the database.
 //Then, retrieve all group data for that user
 
+const getUserById = (id) => {
+    return User.findOrCreate({
+        where: { id },
+    }).then((result) => {
+        return result;
+    })
+}
+
 const verifyUser = (email, username) => {
     return User.findOrCreate({
         where: { email: email },
@@ -145,6 +153,7 @@ const getAllComments = (groupId, bookId) => {
 
 }
 module.exports = {
+    getUserById,
     verifyUser,
     createNewGroup,
     getUserGroups,

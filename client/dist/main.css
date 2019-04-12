@@ -19,7 +19,7 @@
 .leftbar {
   margin-left: 0;
   margin-top: 0;
-  max-width: 280px;
+  width: 280px;
   position: fixed;
   padding: 10px;
   padding-top: 64px;

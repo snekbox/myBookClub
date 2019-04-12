@@ -1,6 +1,6 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20');
-const { verifyUser } = require('../../database/helpers');
+const { verifyUser, getUserById } = require('../../database/helpers');
 
 
 passport.use(new GoogleStrategy({
@@ -11,9 +11,9 @@ passport.use(new GoogleStrategy({
   function (accessToken, refreshToken, profile, done) {
     verifyUser(profile.emails[0].value, `${profile.name.givenName} ${profile.name.familyName}`)
     .then((result) => {
-      return done(null, result[0]);
+      done(null, result[0]);
     }).catch((err) => {
-      return done(err, null);
+      done(err, null);
     });
   }
 ));
@@ -23,7 +23,10 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
+  getUserById(id)
+  .then((user) => {
+    done(null, user);
+  }).catch((err) => {
+    done(err);
   });
 });

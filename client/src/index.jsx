@@ -20,16 +20,32 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
-      user: {},
+      user: { 
+        "id": 3,
+        "username": "108332420382419596387",
+        "email": "tenkin@gmail.com",
+        "createdAt": "2019-04-11T19:26:30.000Z",
+        "updatedAt": "2019-04-11T19:26:30.000Z" },
     }
 
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
+    this.getGroups = this.getGroups.bind(this);
   }
 
   componentDidMount() {
-    // Initial loading logic will go here
+  }
+
+  getGroups (userId) {
+    axios.get('/groups', { userId })
+    .then((bookClubs) => {
+      this.setState({
+        bookClubs
+      })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   renderMain () {
@@ -48,13 +64,21 @@ class Landing extends React.Component {
   }
 
   handleLogIn () {
-    axios.get('/auth/google')
+    axios({
+      url: '/auth/google',
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Credentials": "true",
+      }
+    })
     .then((userObj) => {
       console.log(userObj)
       this.setState({
-        user: userObj,
+        // user: userObj,
         loggedIn: true,
       })
+    }).then(()=>{
+      this.getGroups(this.state.user.id);
     }).catch((err) => {
       console.error(err)
     });
