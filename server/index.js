@@ -29,7 +29,7 @@ app.use(cors({
 
 app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000,
-  keys: 'thisisatotallyrandomstring',
+  keys: ['thisisatotallyrandomstring'],
 }))
 
 
@@ -38,25 +38,25 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', 
+passport.authenticate('google', { failureRedirect: '/' }),
+(req, res) => {
+  if (req.user) {
+    res.redirect('/landing');
+  } else {
+    res.redirect('/login');
+  }
+});
 
 app.get('/auth/google', 
-  passport.authenticate('google', { scope: ['email', 'profile'] })
+  passport.authenticate('google', { scope: ['email', 'profile'] }),
+  // redirects to Google and then to /auth/google/redirect
 );
-
-app.get('/', 
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    if (req.user) {
-      res.redirect('/landing');
-    } else {
-      res.redirect('/login');
-    }
-});
 
 app.get('/auth/google/redirect',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/');
+    res.send(req.user);
   }
 )
 
@@ -71,7 +71,7 @@ app.post('/books', (req, res) => {
 })
 
 app.get('/groups', (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.query;
   getUserGroups(userId)
   .then((groups) => {
     res.json(groups)
@@ -84,7 +84,9 @@ app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body;
   createNewGroup(userId, groupName, bookId)
     .then((group) => {
-      res.json(group)
+      return addUserToGroup(userId, group.id);
+    }).then((newGroup) => {
+      res.send(newGroup);
     }).catch((err) => {
       console.error(err);
     });

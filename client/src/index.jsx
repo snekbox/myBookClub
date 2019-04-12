@@ -38,10 +38,15 @@ class Landing extends React.Component {
   }
 
   getGroups (userId) {
-    axios.get('/groups', { userId })
+    axios.get('/groups', {
+      params: {
+        userId: userId
+      }
+    })
     .then((bookClubs) => {
+      console.log('bookClubs', bookClubs);
       this.setState({
-        bookClubs
+        bookClubs: bookClubs.data,
       })
     }).catch((err) => {
       console.error(err);
@@ -64,15 +69,9 @@ class Landing extends React.Component {
   }
 
   handleLogIn () {
-    axios({
-      url: '/auth/google',
-      headers: {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Credentials": "true",
-      }
-    })
+    return axios.get('http://localhost:3000/auth/google')
     .then((userObj) => {
-      console.log(userObj)
+      // console.log(userObj)
       this.setState({
         // user: userObj,
         loggedIn: true,
@@ -91,7 +90,7 @@ class Landing extends React.Component {
     } else {
       return (
       <div>
-        <LeftBar book={sampleData[0]} club={bookClubs[0]}/>
+        <LeftBar book={bookClubs[0].book} club={bookClubs[0]}/>
         <TopBar chooseView={this.chooseView} />
         {
           this.renderMain()

@@ -12,13 +12,13 @@ const GroupCard = ({ club, book }) => {
       </Row>
       <Row>
         <Col s={4} m={6} l={6} xl={6}>
-          <img src={book.volumeInfo.imageLinks.thumbnail} className="book"/>
+          <img src={book.image} className="book"/>
         </Col>
         <Col s={4} m={6} l={6} xl={6}>
-          <div>"{book.volumeInfo.title}"</div>
+          <div>"{book.title}"</div>
         </Col>
         <Col s={4} m={6} l={6} xl={6}>
-          <div>{book.volumeInfo.authors[0]}</div>
+          <div>{book.author}</div>
         </Col>
         <Col s={12} m={12} l={12} xl={12}>
           Next Meeting: {club.nextMeeting}
