@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, NavItem, Icon, Dropdown, Divider, Button, Modal, TextInput, Textarea, Card } from 'react-materialize'
 
-const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, bookSearchResults }) => (
+const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, bookSearchResults, selectBook, handleCreateBookClubName, addBookClub }) => (
   <div>
     <Navbar brand={<img src='../images/logo.png' className="logo" onClick={() => chooseView('groups')} />} alignLinks="right" className="light-blue">
       <NavItem onClick={() => chooseView('groups')} >
@@ -22,20 +22,20 @@ const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, boo
       }>
         <h6> club owner: current user </h6>
           <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
-          <TextInput className="bookSearchInput" placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
+          <TextInput placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
           <Button title="Search" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
             {
               bookSearchResults.map((book) =>{
-                  return <Card horizontal header={ book.volumeInfo.title }>
+                  return <Card onClick={ ()=>{selectBook(book)} } header={ book.volumeInfo.title }>
                    <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
-                   {book.volumeInfo.description}
+                   {book.volumeInfo.description} 
                    </Card>
-               })
-              }
+               }) //modal should close when book is selected, and selected book should render in outer modal
+              } 
           </Modal>
-        <TextInput placeholder="Club Name" />
+        <TextInput placeholder="Club Name" onChange={ (e)=>{handleCreateBookClubName(e)} }/>
         <Textarea placeholder="Additional data about club here" />
-        <Button>Create Club</Button>
+        <Button onClick={ addBookClub }>Create Club</Button>
       </Modal>
 
       <NavItem href="/">

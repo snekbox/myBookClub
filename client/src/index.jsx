@@ -22,6 +22,10 @@ class Landing extends React.Component {
       currentBook: googleBooksApiData.items[0],
       bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
       bookSearchInput: '', //create function below which handles input on change in text box, changes bookSearchInput
+      bookSearchChoice: null,
+      createBookClubName: null,
+      createBookClubOwner: null,
+      currentUser: null,
     }
 
     this.renderMain = this.renderMain.bind(this);
@@ -31,7 +35,9 @@ class Landing extends React.Component {
     this.handleBookSearchSubmit = this.handleBookSearchSubmit.bind(this);
     this.handleBookSearchInput = this.handleBookSearchInput.bind(this); 
     this.bookSearch = this.bookSearch.bind(this); //api request to book api, returns X number of books that match search
-    //this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
+    this.selectBook = this.selectBook.bind(this); //for use selecting books when creating groups
+    this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
+    this.handleCreateBookClubName = this.handleCreateBookClubName.bind(this);
   }
 
   componentDidMount() {
@@ -54,7 +60,10 @@ class Landing extends React.Component {
   }
 
   handleLogIn (googleResponse) {
-    this.setState({loggedIn: true});
+    this.setState({
+      loggedIn: true,
+      currentUser: googleResponse.profileObj.email, //possibly name for use in creating club owners
+    });
     console.log(googleResponse);
   }
 
@@ -93,27 +102,47 @@ handleBookSearchSubmit() {
 }
 
 
-// addBookClub (bookClubName, currentBookInfo) { //current book info from bookSearch function
-//   const bookClub = {};
-//   bookClub.name = bookClubName;
-//   bookClub.currentBookInfo = currentBookInfo;
-    
-  //   //adds bookClub to database, sends back: id, name, owner, nextMeeting, currentBook, description, image
+addBookClub () { //current book info from bookSearch function
 
-  //   // axios.post('', {}) 
-  //   // .then(()=>{
-  //   // })
-  //   // .catch((err)=>{
-  //   // })
-  //   //  .then(()=>{
-  //   //    return axios.get()
-  //   //  })
-  //   //  .then((database info) =>{
-  //   //  })
-  //   //  .catch((err) => {
-  //   //  })
-  // }
+  this.setState({
+    createBookClubOwner: this.state.currentUser,
+  })
 
+  const {bookSearchChoice, createBookClubName, createBookClubOwner} = this.state;
+
+
+  const data = { 
+   // id: 'Num',//get this from db later
+    userId: this.state.user.id,
+    name: createBookClubName,
+    currentBook: bookSearchChoice.id,
+  }
+  axios.post('/test', {
+    data: data,
+  })
+  .then((response)=>{
+    console.log(response);
+    //let client know request went through by setting the state to the data from database
+  })
+  .catch((err)=>{
+    console.log('data not added to database! line 127, index.jsx')
+  })
+}
+ 
+
+  //function to add current book to modal for club creation on card click
+  selectBook (book) {
+    this.setState({
+      bookSearchChoice: book, //needs to be the book object selected when creating group
+    })
+  }
+
+  handleCreateBookClubName (e){
+    this.setState({
+      createBookClubName: e.target.value,
+    })
+    console.log(this.state.createBookClubName);
+  }
 
   render() {
     const {loggedIn, bookClubs, bookSearchResults, sampleData, bookSearchInput } = this.state;  // destructure state here
@@ -126,6 +155,9 @@ handleBookSearchSubmit() {
         <TopBar chooseView={this.chooseView} 
         handleBookSearchInput={ this.handleBookSearchInput } 
         handleBookSearchSubmit={ this.handleBookSearchSubmit }
+        selectBook={ this.selectBook}
+        handleCreateBookClubName={ this.handleCreateBookClubName }
+        addBookClub={this.addBookClub}
         bookSearchResults={ bookSearchResults }
         bookSearchInput={ bookSearchInput }
         />

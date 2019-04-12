@@ -2,10 +2,11 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
+const {verifyUser, createNewGroup} = require('../database/helpers');
 const { json, googleBooksApiData } = require('../database/sample-data/sample.js')
 
 const app = express();
-
+app.use(bodyParser());
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 app.get('/', (req, res) => {
@@ -17,6 +18,21 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+app.post('/test', (req, res) => {
+  console.log(req.body)
+  res.sendStatus(200);
+//   return verifyUser(req.body.email, req.body.username)
+// .then((id) =>{
+//   return createNewGroup(id, req.groupName, req.bookId)
+// })
+// .then((newGroup) =>{
+//   res.json(newGroup);
+// })
+// .catch((err)=>{
+//   console.log(err, 'did not add data to db, line 32 index.js');
+// })
+})
 
 app.get('/test', (req, res) => {
   res.json(googleBooksApiData); //sending back book data for book club creation test --Sam
