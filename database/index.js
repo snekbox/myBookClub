@@ -45,6 +45,7 @@ Book.init({
 class Group extends Model {}
 Group.init({
   name: { type: Sequelize.STRING, allowNull: false, },
+  nextMeeting: {type: Sequelize.DATE},
   }, {
     sequelize,
     modelName: 'group',
