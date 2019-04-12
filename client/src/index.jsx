@@ -25,6 +25,9 @@ class Landing extends React.Component {
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
+
+    this.bookSearch = this.bookSearch.bind(this); //api request to book api, returns X number of books that match search
+    this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
   }
 
   componentDidMount() {
@@ -50,6 +53,39 @@ class Landing extends React.Component {
     this.setState({loggedIn: true});
     console.log(googleResponse);
   }
+
+  bookSearch (bookSearchQuery) { //grabs book data on bookSearch, {title, image, description}
+    //sends get request to server
+    return axios.get('/')
+    .then((bookSearchResults)=>{
+        //set bookSearchResults as a part of this state
+    })
+    .catch((err)=>{
+      console.log('Server responded with error');
+    })
+  }
+
+  // addBookClub (bookClubName, currentBookInfo) { //current book info from bookSearch function
+  //   const bookClub = {};
+  //   bookClub.name = bookClubName;
+  //   bookClub.currentBookInfo = currentBookInfo;
+    
+  //   //adds bookClub to database, sends back: id, name, owner, nextMeeting, currentBook, description, image
+
+  //   // axios.post('', {}) 
+  //   // .then(()=>{
+  //   // })
+  //   // .catch((err)=>{
+  //   // })
+  //   //  .then(()=>{
+  //   //    return axios.get()
+  //   //  })
+  //   //  .then((database info) =>{
+  //   //  })
+  //   //  .catch((err) => {
+  //   //  })
+  // }
+
 
   render() {
     const {loggedIn, bookClubs, sampleData } = this.state;  // destructure state here

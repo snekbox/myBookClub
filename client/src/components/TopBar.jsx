@@ -21,11 +21,11 @@ const TopBar = ({ chooseView, sampleData }) => (
         </NavItem> 
       }>
         <h6> club owner: current user </h6>
-          <Modal header="select a book:" trigger={ <Button> Select a book! </Button> }>
+          <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
           <TextInput placeholder="search for books"></TextInput>
             {
               sampleData.map((book) =>{
-                  return <Card horizontal header={ book.volumeInfo.title } onClick={/** selects book for outer modal*/}>
+                  return <Card horizontal header={ book.volumeInfo.title }>
                    <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
                    {book.volumeInfo.description}
                    </Card>
@@ -34,7 +34,7 @@ const TopBar = ({ chooseView, sampleData }) => (
           </Modal>
         <TextInput placeholder="Club Name" />
         <Textarea placeholder="Additional data about club here" />
-        <Button onClick={ submitClub }>Create Club</Button>
+        <Button>Create Club</Button>
       </Modal>
 
       <NavItem href="/">
