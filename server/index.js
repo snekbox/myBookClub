@@ -20,22 +20,20 @@ app.get('/', (req, res) => {
 });
 
 app.post('/test', (req, res) => {
-  console.log(req.body)
-  res.sendStatus(200);
-//   return verifyUser(req.body.email, req.body.username)
-// .then((id) =>{
-//   return createNewGroup(id, req.groupName, req.bookId)
-// })
-// .then((newGroup) =>{
-//   res.json(newGroup);
-// })
-// .catch((err)=>{
-//   console.log(err, 'did not add data to db, line 32 index.js');
-// })
+                          console.log(req.body.data);
+  return createNewGroup(/**userId, groupName, bookId */)
+  .then((newGroup) =>{
+    console.log('data added to database!')
+    //then return the new group and add it to state, since no function that grabs all groups from db
+    res.json(newGroup);
+  })
+  .catch((err)=>{
+    console.log(err, 'unable to add data to db, line 32 index.js');
+  })
 })
-
+  
 app.get('/test', (req, res) => {
-  res.json(googleBooksApiData); //sending back book data for book club creation test --Sam
+  res.json(googleBooksApiData); //sending back book data for book club creation test
   // See below for things to store in the database and their relative paths
   // Title:         json.items[i].volumeInfo.title
   // Authors:       json.items[i].volumeInfo.authors

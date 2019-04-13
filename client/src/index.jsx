@@ -62,7 +62,7 @@ class Landing extends React.Component {
   handleLogIn (googleResponse) {
     this.setState({
       loggedIn: true,
-      currentUser: googleResponse.profileObj.email, //possibly name for use in creating club owners
+      currentUser: googleResponse.profileObj, //possibly name for use in creating club owners
     });
     console.log(googleResponse);
   }
@@ -103,26 +103,24 @@ handleBookSearchSubmit() {
 
 
 addBookClub () { //current book info from bookSearch function
-
   this.setState({
     createBookClubOwner: this.state.currentUser,
   })
-
-  const {bookSearchChoice, createBookClubName, createBookClubOwner} = this.state;
-
-
+  const { bookSearchChoice, createBookClubName, currentUser } = this.state;
   const data = { 
-   // id: 'Num',//get this from db later
-    userId: this.state.user.id,
+    userId: currentUser,
     name: createBookClubName,
-    currentBook: bookSearchChoice.id,
+    currentBook: bookSearchChoice,
   }
   axios.post('/test', {
     data: data,
   })
   .then((response)=>{
-    console.log(response);
-    //let client know request went through by setting the state to the data from database
+    console.log(response, 'group saved to database');
+    this.setState({
+      bookClubs: bookClubs.concat(response), // state reflects addition to book clubs
+    })
+    //let client know request went through by setting this.state.bookClubs equal to all the clubs
   })
   .catch((err)=>{
     console.log('data not added to database! line 127, index.jsx')
