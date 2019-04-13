@@ -77,9 +77,20 @@ class Landing extends React.Component {
     })
   }
   
-  handleLogIn () {
-    this.getGroups(this.state.user.id);
-    this.setState({loggedIn: true});
+  handleLogIn (resp) {
+    debugger;
+    axios.post('/login', {user: resp.profileObj})
+      .then((response) => {
+        const userObj = response.data
+        this.setState({
+          user: userObj,
+          loggedIn: true,
+        })
+      }).then(() => {
+        this.getGroups(this.state.user.id);
+      }).catch((err) => {
+        console.error(err)
+      });
   }
   
   render() {

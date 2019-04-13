@@ -63,6 +63,17 @@ app.post('/groups', (req, res) => {
     });
 })
 
+app.post('/login', (req, res) => {
+  const { email, givenName, familyName } = req.body.user;
+  verifyUser(email, `${givenName} ${familyName}`)
+  .then((response) => {
+    const userObj = response[0];
+    res.send(userObj);
+  }).catch((err) => {
+    console.error(err);
+  });
+})
+
 app.get('/test', (req, res) => {
   res.send(json.items);
   // See below for things to store in the database and their relative paths
