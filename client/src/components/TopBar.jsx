@@ -23,20 +23,21 @@ const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, boo
         <h6> club owner: current user </h6>
           <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
           <TextInput placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
-          <Button title="Search" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
+          <Button className="bookSearch" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
             {
               bookSearchResults.map((book) =>{
                   return <Card onClick={ ()=>{selectBook(book)} } header={ book.volumeInfo.title }>
+                  <button class="modal-close">Select Book</button>
                    <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
                    {book.volumeInfo.description} 
                    </Card>
-               }) //modal should close when book is selected, and selected book should render in outer modal
+               })
               } 
           </Modal>
         <TextInput placeholder="Club Name" onChange={ (e)=>{handleCreateBookClubName(e)} }/>
         <Textarea placeholder="Additional data about club here" />
-        <Button onClick={ addBookClub }>Create Club</Button>
-      </Modal>
+        <Button class="modal-close" onClick={ addBookClub }>Create Club</Button>
+      </Modal>  
 
       <NavItem href="/">
         <Icon>

@@ -20,10 +20,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/test', (req, res) => {
-                          console.log(req.body.data);
+            console.log(req.body.data); 
   return createNewGroup(/**userId, groupName, bookId */)
   .then((newGroup) =>{
-    console.log('data added to database!')
+    console.log(newGroup);
+    console.log('data added to database!');
     //then return the new group and add it to state, since no function that grabs all groups from db
     res.json(newGroup);
   })

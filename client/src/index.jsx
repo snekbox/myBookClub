@@ -21,11 +21,9 @@ class Landing extends React.Component {
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
       bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
-      bookSearchInput: '', //create function below which handles input on change in text box, changes bookSearchInput
+      bookSearchInput: '', //handles book search input when creating group
       bookSearchChoice: null,
       createBookClubName: null,
-      createBookClubOwner: null,
-      currentUser: null,
     }
 
     this.renderMain = this.renderMain.bind(this);
@@ -62,7 +60,6 @@ class Landing extends React.Component {
   handleLogIn (googleResponse) {
     this.setState({
       loggedIn: true,
-      currentUser: googleResponse.profileObj, //possibly name for use in creating club owners
     });
     console.log(googleResponse);
   }
@@ -70,23 +67,19 @@ class Landing extends React.Component {
 
 
   
-  bookSearch (bookSearchQuery) { //grabs book data on bookSearch, {title, image, description}
-  //sends get request to server
-  axios.get('/test') //param setting issues so I'm gonna get all data for now and filter in client
+  bookSearch (bookSearchQuery) { //sends get request to api for books matching search query when creating a group
+  axios.get('/test') 
   .then((bookSearchResults)=>{
     this.setState({
       bookSearchResults: bookSearchResults.data.items.filter(book => book.volumeInfo.title.toUpperCase().includes(bookSearchQuery.toUpperCase())), 
-      //sets state to search results, needs to be changed to search in second axios argument
-      //when I figure that out
+      //sets bookSearchResults, in this.state, to search results
     })
   })
   .catch((err)=>{
-    console.log("error line 82 index.jsx: server sent back bad data from google API");
-    //console.log('Server responded with error');
+    console.log('server responded with error: could not complete bookSearch request');
   })
 }
 
-//responds to user typing input in 'select a book' box in + modal
 handleBookSearchInput (e) {
   //possible throttling of api calls here, when a few letters have been input 
   //to help users pick books before they finish typing an entire book name
@@ -97,18 +90,13 @@ handleBookSearchInput (e) {
 
 //responds to user clicking search button
 handleBookSearchSubmit() {
-  this.bookSearch(this.state.bookSearchInput) //this should change the state to the results of 
-  //a get request to google api for books matching query
+  this.bookSearch(this.state.bookSearchInput) 
 }
 
 
-addBookClub () { //current book info from bookSearch function
-  this.setState({
-    createBookClubOwner: this.state.currentUser,
-  })
-  const { bookSearchChoice, createBookClubName, currentUser } = this.state;
-  const data = { 
-    userId: currentUser,
+addBookClub () { 
+  const { bookSearchChoice, createBookClubName } = this.state;
+  const data = { //still need the userID on this.state.user/whatever else info is needed for group creation
     name: createBookClubName,
     currentBook: bookSearchChoice,
   }
@@ -117,24 +105,24 @@ addBookClub () { //current book info from bookSearch function
   })
   .then((response)=>{
     console.log(response, 'group saved to database');
-    this.setState({
-      bookClubs: bookClubs.concat(response), // state reflects addition to book clubs
-    })
-    //let client know request went through by setting this.state.bookClubs equal to all the clubs
+    // this.setState({
+    //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
+    // })                                       //to reflect newly added bookClub
   })
   .catch((err)=>{
-    console.log('data not added to database! line 127, index.jsx')
+    console.log('club NOT added to database')
   })
 }
  
 
-  //function to add current book to modal for club creation on card click
+  //function selects currentBook when creating a new group
   selectBook (book) {
     this.setState({
-      bookSearchChoice: book, //needs to be the book object selected when creating group
+      bookSearchChoice: book, 
     })
   }
 
+  //function sets createBookClubName to input text when creating a new group
   handleCreateBookClubName (e){
     this.setState({
       createBookClubName: e.target.value,
