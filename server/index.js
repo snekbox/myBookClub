@@ -14,6 +14,7 @@ const { verifyUser,
   getGroupBooks,
   addComment,
   getAllComments,
+  searchGroups,
 } = require('../database/helpers')
 
 const app = express();
@@ -49,6 +50,15 @@ app.get('/groups', (req, res) => {
     }).catch((err) => {
       console.error(err);
     });
+})
+
+app.get('/groups/search', (req, res) => {
+  searchGroups(req.body)
+  .then((result) => {
+    res.send(result);
+  }).catch((err) => {
+    console.error(err);
+  });
 })
 
 app.post('/groups', (req, res) => {

@@ -1,4 +1,5 @@
 const {User, Group, Book, Comment, Note, BookGroup, UserBook, UserGroup} = require('./index.js')
+const {Op} = require('sequelize');
 
 //Check or Add new user to the database.
 //Then, retrieve all group data for that user
@@ -165,6 +166,22 @@ const getAllComments = (groupId, bookId) => {
         return err;
     });
 }
+
+const searchGroups = (query) => {
+    const q = query.query;
+    return Group.findAll({
+        where: {
+            name: {
+                [Op.like] : `%${q}%`,
+            },
+        }
+    }).then((result) => {
+        return result;
+    }).catch((err) => {
+        return err;
+    });
+}
+
 module.exports = {
     verifyUser,
     createNewGroup,
@@ -177,4 +194,5 @@ module.exports = {
     getGroupBooks,
     addComment,
     getAllComments,
+    searchGroups,
 }
