@@ -31,6 +31,7 @@ class Landing extends React.Component {
     
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
+    this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
     this.getGroups = this.getGroups.bind(this);
   }
@@ -57,7 +58,7 @@ class Landing extends React.Component {
   renderMain () {
     const { view, bookClubs, sampleData, currentBook, currentClub } = this.state;
     if (view === 'groups') {
-      return <BodyGrid chooseView={ this.chooseView} clubs={bookClubs} books={sampleData} />
+      return <BodyGrid chooseView={this.chooseView} chooseClub={this.chooseClub} clubs={bookClubs} books={sampleData} />
     } else if (view === 'settings') {
       return <Settings clubs={bookClubs} />
     } else if (view === 'club view') {
@@ -67,6 +68,13 @@ class Landing extends React.Component {
 
   chooseView (view) {
     this.setState({view})
+  }
+  
+  chooseClub (club, book) {
+    this.setState({
+      currentClub: club,
+      currentBook: book,
+    })
   }
   
   handleLogIn () {
