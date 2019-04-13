@@ -24,8 +24,15 @@ class Landing extends React.Component {
       bookSearchInput: '', //handles book search input when creating group
       bookSearchChoice: null,
       createBookClubName: null,
+      user: {
+        "id": 1,
+        "username": "Mark Maher",
+        "email": "tenkin@gmail.com",
+        "createdAt": "2019-04-11T19:26:30.000Z",
+        "updatedAt": "2019-04-11T19:26:30.000Z"
+      },
     }
-
+    
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
@@ -36,10 +43,26 @@ class Landing extends React.Component {
     this.selectBook = this.selectBook.bind(this); //for use selecting books when creating groups
     this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
     this.handleCreateBookClubName = this.handleCreateBookClubName.bind(this);
+    this.getGroups = this.getGroups.bind(this);
   }
 
   componentDidMount() {
     // Initial loading logic will go here
+  }
+  
+  getGroups(userId) {
+    axios.get('/groups', {
+      params: {
+        userId: userId
+      }
+    })
+    .then((bookClubs) => {
+      this.setState({
+        bookClubs: bookClubs.data,
+      })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   renderMain () {
@@ -52,18 +75,15 @@ class Landing extends React.Component {
       return <BookClubView club={currentClub} book={currentBook} />
     }
   }
-
+  
   chooseView (view) {
     this.setState({view})
   }
 
-  handleLogIn (googleResponse) {
-    this.setState({
-      loggedIn: true,
-    });
-    console.log(googleResponse);
+  handleLogIn () {
+    this.getGroups(this.state.user.id);
+    this.setState({loggedIn: true});
   }
-
 
 
   
@@ -95,12 +115,13 @@ handleBookSearchSubmit() {
 
 
 addBookClub () { 
-  const { bookSearchChoice, createBookClubName } = this.state;
+  const { bookSearchChoice, createBookClubName, user } = this.state;
   const data = { //still need the userID on this.state.user/whatever else info is needed for group creation
-    name: createBookClubName,
-    currentBook: bookSearchChoice,
+    userId: user.id,
+    groupName: createBookClubName,
+    bookId: bookSearchChoice.id,
   }
-  axios.post('/test', {
+  axios.post('/groups', {
     data: data,
   })
   .then((response)=>{
@@ -130,14 +151,15 @@ addBookClub () {
     console.log(this.state.createBookClubName);
   }
 
+  
   render() {
-    const {loggedIn, bookClubs, bookSearchResults, sampleData, bookSearchInput } = this.state;  // destructure state here
+    const { loggedIn, bookClubs, bookSearchInput, bookSearchResults} = this.state;  // destructure state here
     if (!loggedIn) {
-      return <LogIn handleLogIn={this.handleLogIn} />
+      return  <LogIn handleLogIn={this.handleLogIn} /> 
     } else {
       return (
       <div>
-        <LeftBar book={sampleData[0]} club={bookClubs[0]}/>
+        <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
         <TopBar chooseView={this.chooseView} 
         handleBookSearchInput={ this.handleBookSearchInput } 
         handleBookSearchSubmit={ this.handleBookSearchSubmit }
@@ -152,16 +174,9 @@ addBookClub () {
         }
       </div>
       )
-      // Nav bar
-        // logo
-        // butttons
-      // Side bar
-        // Next meeting component
-      // Groups view
-        // Individual groups
-        // add new group button
     }
   }
 }
+
 
 ReactDOM.render(<Landing />, document.getElementById("root"));

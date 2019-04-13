@@ -26,8 +26,9 @@ const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, boo
           <Button className="bookSearch" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
             {
               bookSearchResults.map((book) =>{
-                  return <Card onClick={ ()=>{selectBook(book)} } header={ book.volumeInfo.title }>
-                  <button class="modal-close">Select Book</button>
+                  return <Card onClick={ ()=>{selectBook(book)} }>
+                  <h6>{book.volumeInfo.title}</h6>
+                  <Button className="modal-close">Select Book</Button>
                    <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
                    {book.volumeInfo.description} 
                    </Card>
@@ -36,7 +37,7 @@ const TopBar = ({ chooseView, handleBookSearchInput, handleBookSearchSubmit, boo
           </Modal>
         <TextInput placeholder="Club Name" onChange={ (e)=>{handleCreateBookClubName(e)} }/>
         <Textarea placeholder="Additional data about club here" />
-        <Button class="modal-close" onClick={ addBookClub }>Create Club</Button>
+        <Button className="modal-close" onClick={ addBookClub }>Create Club</Button>
       </Modal>  
 
       <NavItem href="/">

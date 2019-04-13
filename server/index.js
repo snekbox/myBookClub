@@ -2,12 +2,25 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
-const {verifyUser, createNewGroup} = require('../database/helpers');
-const { json, googleBooksApiData } = require('../database/sample-data/sample.js')
+const { json } = require('../database/sample-data/sample.js')
+const { verifyUser,
+  createNewGroup,
+  getUserGroups,
+  addOrFindBook,
+  getOwnerGroups,
+  addUserToGroup,
+  getGroupUsers,
+  addBookToGroup,
+  getGroupBooks,
+  addComment,
+  getAllComments,
+  googleBooksApiData
+} = require('../database/helpers')
 
 const app = express();
 app.use(bodyParser());
 app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   items.selectAll((err, data) => {
@@ -19,20 +32,39 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/test', (req, res) => {
-            console.log(req.body.data); 
-  return createNewGroup(/**userId, groupName, bookId */)
-  .then((newGroup) =>{
-    console.log(newGroup);
-    console.log('data added to database!');
-    //then return the new group and add it to state, since no function that grabs all groups from db
-    res.json(newGroup);
-  })
-  .catch((err)=>{
-    console.log(err, 'unable to add data to db, line 32 index.js');
-  })
-})
   
+app.post('/books', (req, res) => {
+  const { isbn, title, author, published, description, urlInfo, image } = req.body;
+  addOrFindBook(isbn, title, author, published, description, urlInfo, image)
+    .then((book) => {
+      res.json(book);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.get('/groups', (req, res) => {
+  const { userId } = req.query;
+  getUserGroups(userId)
+    .then((groups) => {
+      res.json(groups)
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.post('/groups', (req, res) => {
+  const { userId, groupName, bookId } = req.body;
+  createNewGroup(userId, groupName, bookId)
+    .then((group) => {
+      return addUserToGroup(userId, group.id);
+    }).then((newGroup) => {
+      res.send(newGroup);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
 app.get('/test', (req, res) => {
   res.json(googleBooksApiData); //sending back book data for book club creation test
   // See below for things to store in the database and their relative paths
