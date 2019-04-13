@@ -35,6 +35,7 @@ class Landing extends React.Component {
     
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
+    this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
 
     this.handleBookSearchSubmit = this.handleBookSearchSubmit.bind(this);
@@ -68,7 +69,7 @@ class Landing extends React.Component {
   renderMain () {
     const { view, bookClubs, sampleData, currentBook, currentClub } = this.state;
     if (view === 'groups') {
-      return <BodyGrid chooseView={ this.chooseView} clubs={bookClubs} books={sampleData} />
+      return <BodyGrid chooseView={this.chooseView} chooseClub={this.chooseClub} clubs={bookClubs} books={sampleData} />
     } else if (view === 'settings') {
       return <Settings clubs={bookClubs} />
     } else if (view === 'club view') {
@@ -79,7 +80,14 @@ class Landing extends React.Component {
   chooseView (view) {
     this.setState({view})
   }
-
+  
+  chooseClub (club, book) {
+    this.setState({
+      currentClub: club,
+      currentBook: book,
+    })
+  }
+  
   handleLogIn () {
     this.getGroups(this.state.user.id);
     this.setState({loggedIn: true});
@@ -88,15 +96,18 @@ class Landing extends React.Component {
 
   
   bookSearch (bookSearchQuery) { //sends get request to api for books matching search query when creating a group
-  axios.get('/test') 
+  return axios.get('/books/googleapi', {
+    params: {
+      query: bookSearchQuery,
+    }
+  }) 
   .then((bookSearchResults)=>{
     this.setState({
-      bookSearchResults: bookSearchResults.data.items.filter(book => book.volumeInfo.title.toUpperCase().includes(bookSearchQuery.toUpperCase())), 
-      //sets bookSearchResults, in this.state, to search results
+      bookSearchResults: bookSearchResults.data, 
     })
   })
   .catch((err)=>{
-    console.log('server responded with error: could not complete bookSearch request');
+    console.log(err, 'server responded with error: could not complete bookSearch request');
   })
 }
 
@@ -116,26 +127,50 @@ handleBookSearchSubmit() {
 
 addBookClub () { 
   const { bookSearchChoice, createBookClubName, user } = this.state;
-  const data = { //still need the userID on this.state.user/whatever else info is needed for group creation
+  // console.log(bookSearchChoice)
+  let author = bookSearchChoice.volumeInfo.authors;
+  if(Array.isArray(bookSearchChoice.volumeInfo.authors)){
+    author = bookSearchChoice.volumeInfo.authors.join(', ');
+  }
+  const bookQuery = { 
+    title: bookSearchChoice.volumeInfo.title,
+    author: author,
+    published: bookSearchChoice.volumeInfo.publishedDate.slice(0,4),
+    image: bookSearchChoice.volumeInfo.imageLinks.thumbnail,
+    urlInfo: bookSearchChoice.volumeInfo.infoLink,
+    description: bookSearchChoice.volumeInfo.description,
+    isbn: bookSearchChoice.volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier 
+  }
+  //posts to books, to return book id
+  const postObject = {
     userId: user.id,
     groupName: createBookClubName,
-    bookId: bookSearchChoice.id,
+    bookId: null,
   }
-  axios.post('/groups', {
-    data: data,
+  axios.post('/books/googleapi', {
+    query: bookQuery,
   })
   .then((response)=>{
-    console.log(response, 'group saved to database');
-    // this.setState({
-    //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
-    // })                                       //to reflect newly added bookClub
+    postObject.bookId = response.data[0].id
   })
-  .catch((err)=>{
-    console.log('club NOT added to database')
+  .catch((err) =>{
+    console.log('error, line 149 index.jsx')
+  })
+  .then(()=>{
+    axios.post('/groups', {
+      data: postObject,
+    })
+    .then((response)=>{
+      console.log(response, 'group saved to database');
+      // this.setState({
+      //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
+      // })                                       //to reflect newly added bookClub
+    })
+    .catch((err)=>{
+      console.log('club NOT added to database')
+    })
   })
 }
- 
-
   //function selects currentBook when creating a new group
   selectBook (book) {
     this.setState({
@@ -148,7 +183,6 @@ addBookClub () {
     this.setState({
       createBookClubName: e.target.value,
     })
-    console.log(this.state.createBookClubName);
   }
 
   
