@@ -14,6 +14,7 @@ const { verifyUser,
   getGroupBooks,
   addComment,
   getAllComments,
+  searchGroups,
 } = require('../database/helpers')
 
 const app = express();
@@ -51,6 +52,15 @@ app.get('/groups', (req, res) => {
     });
 })
 
+app.get('/groups/search', (req, res) => {
+  searchGroups(req.body)
+    .then((result) => {
+      res.send(result);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body;
   createNewGroup(userId, groupName, bookId)
@@ -58,6 +68,17 @@ app.post('/groups', (req, res) => {
       return addUserToGroup(userId, group.id);
     }).then((newGroup) => {
       res.send(newGroup);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.post('/login', (req, res) => {
+  const { email, givenName, familyName } = req.body.user;
+  verifyUser(email, `${givenName} ${familyName}`)
+    .then((response) => {
+      const userObj = response[0];
+      res.send(userObj);
     }).catch((err) => {
       console.error(err);
     });
