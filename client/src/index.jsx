@@ -20,15 +20,38 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      user: {
+        "id": 1,
+        "username": "Mark Maher",
+        "email": "tenkin@gmail.com",
+        "createdAt": "2019-04-11T19:26:30.000Z",
+        "updatedAt": "2019-04-11T19:26:30.000Z"
+      },
     }
-
+    
     this.renderMain = this.renderMain.bind(this);
     this.chooseView = this.chooseView.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
+    this.getGroups = this.getGroups.bind(this);
   }
 
   componentDidMount() {
     // Initial loading logic will go here
+  }
+  
+  getGroups(userId) {
+    axios.get('/groups', {
+      params: {
+        userId: userId
+      }
+    })
+    .then((bookClubs) => {
+      this.setState({
+        bookClubs: bookClubs.data,
+      })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   renderMain () {
@@ -45,36 +68,29 @@ class Landing extends React.Component {
   chooseView (view) {
     this.setState({view})
   }
-
-  handleLogIn (googleResponse) {
+  
+  handleLogIn () {
+    this.getGroups(this.state.user.id);
     this.setState({loggedIn: true});
-    console.log(googleResponse);
   }
-
+  
   render() {
-    const {loggedIn, bookClubs, sampleData } = this.state;  // destructure state here
+    const { loggedIn, bookClubs } = this.state;  // destructure state here
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />
     } else {
       return (
-      <div>
-        <LeftBar book={sampleData[0]} club={bookClubs[0]}/>
-        <TopBar chooseView={this.chooseView} />
-        {
-          this.renderMain()
-        }
-      </div>
+        <div>
+          <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
+          <TopBar chooseView={this.chooseView} />
+          {
+            this.renderMain()
+          }
+        </div>
       )
-      // Nav bar
-        // logo
-        // butttons
-      // Side bar
-        // Next meeting component
-      // Groups view
-        // Individual groups
-        // add new group button
     }
   }
 }
+
 
 ReactDOM.render(<Landing />, document.getElementById("root"));
