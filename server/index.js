@@ -3,6 +3,18 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database');
 const { json } = require('../database/sample-data/sample.js')
+const { verifyUser,
+  createNewGroup,
+  getUserGroups,
+  addOrFindBook,
+  getOwnerGroups,
+  addUserToGroup,
+  getGroupUsers,
+  addBookToGroup,
+  getGroupBooks,
+  addComment,
+  getAllComments,
+} = require('../database/helpers')
 
 const app = express();
 
