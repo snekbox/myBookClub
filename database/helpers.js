@@ -174,7 +174,11 @@ const searchGroups = (query) => {
             name: {
                 [Op.like]: `%${q}%`,
             },
-        }
+        },
+        include: [
+            { model: User },
+            { model: Book }
+        ]
     }).then((result) => {
         return result;
     }).catch((err) => {
