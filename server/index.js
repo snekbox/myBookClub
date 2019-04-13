@@ -7,6 +7,7 @@ const { json } = require('../database/sample-data/sample.js')
 const app = express();
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   items.selectAll((err, data) => {
@@ -17,6 +18,38 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+app.post('/books', (req, res) => {
+  const { isbn, title, author, published, description, urlInfo, image } = req.body;
+  addOrFindBook(isbn, title, author, published, description, urlInfo, image)
+    .then((book) => {
+      res.json(book);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.get('/groups', (req, res) => {
+  const { userId } = req.query;
+  getUserGroups(userId)
+    .then((groups) => {
+      res.json(groups)
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.post('/groups', (req, res) => {
+  const { userId, groupName, bookId } = req.body;
+  createNewGroup(userId, groupName, bookId)
+    .then((group) => {
+      return addUserToGroup(userId, group.id);
+    }).then((newGroup) => {
+      res.send(newGroup);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
 
 app.get('/test', (req, res) => {
   res.send(json.items);
