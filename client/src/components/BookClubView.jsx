@@ -19,16 +19,16 @@ const BookClubView = ( { club, book } ) => (
 
     <div className="bodygrid cyan lighten-5">
     <Row>
-        <Col m={6} s={12}>
+        <Col s={12}>
             <Card header={<h3>{club.name}</h3>}>
-                <h4>{book.volumeInfo.title}</h4>
-                <img src={book.volumeInfo.imageLinks.thumbnail} />
-                <article> {book.volumeInfo.description} </article>
+                <h4>{book.title}</h4>
+                <img src={book.image} />
+                <article> {book.description} </article>
             </Card>
         </Col>
-        <Col>
+        {/* <Col>
             <h3>Calendar here</h3>
-        </Col>
+        </Col> */}
     </Row>
         <Row>
             <Col s={6}>

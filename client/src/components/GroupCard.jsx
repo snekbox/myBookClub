@@ -21,7 +21,7 @@ const GroupCard = ({ club, book }) => {
             <div>{book.author}</div>
           </Col>
           <Col s={12} m={12} l={12} xl={12}>
-            Next Meeting: {club.nextMeeting}
+            Next Meeting: {club.nextMeeting || 'No meetings scheduled'}
           </Col>
         </Row>
       </div>
