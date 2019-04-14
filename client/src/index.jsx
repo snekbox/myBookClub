@@ -20,6 +20,10 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
+      bookSearchInput: '', //handles book search input when creating group
+      bookSearchChoice: null,
+      createBookClubName: null,
       user: {
         "id": 1,
         "username": "Mark Maher",
@@ -33,6 +37,13 @@ class Landing extends React.Component {
     this.chooseView = this.chooseView.bind(this);
     this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
+
+    this.handleBookSearchSubmit = this.handleBookSearchSubmit.bind(this);
+    this.handleBookSearchInput = this.handleBookSearchInput.bind(this); 
+    this.bookSearch = this.bookSearch.bind(this); //api request to book api, returns X number of books that match search
+    this.selectBook = this.selectBook.bind(this); //for use selecting books when creating groups
+    this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
+    this.handleCreateBookClubName = this.handleCreateBookClubName.bind(this);
     this.getGroups = this.getGroups.bind(this);
   }
 
@@ -65,7 +76,7 @@ class Landing extends React.Component {
       return <BookClubView club={currentClub} book={currentBook} />
     }
   }
-
+  
   chooseView (view) {
     this.setState({view})
   }
@@ -81,20 +92,121 @@ class Landing extends React.Component {
     this.getGroups(this.state.user.id);
     this.setState({loggedIn: true});
   }
+
+
+  
+  bookSearch (bookSearchQuery) { //sends get request to api for books matching search query when creating a group
+  return axios.get('/books/googleapi', {
+    params: {
+      query: bookSearchQuery,
+    }
+  }) 
+  .then((bookSearchResults)=>{
+    this.setState({
+      bookSearchResults: bookSearchResults.data, 
+    })
+  })
+  .catch((err)=>{
+    console.log(err, 'server responded with error: could not complete bookSearch request');
+  })
+}
+
+handleBookSearchInput (e) {
+  //possible throttling of api calls here, when a few letters have been input 
+  //to help users pick books before they finish typing an entire book name
+  this.setState({
+    bookSearchInput: e.target.value,
+  })
+}
+
+//responds to user clicking search button
+handleBookSearchSubmit() {
+  this.bookSearch(this.state.bookSearchInput) 
+}
+
+
+addBookClub () { 
+  const { bookSearchChoice, createBookClubName, user } = this.state;
+  // console.log(bookSearchChoice)
+  let author = bookSearchChoice.volumeInfo.authors;
+  if(Array.isArray(bookSearchChoice.volumeInfo.authors)){
+    author = bookSearchChoice.volumeInfo.authors.join(', ');
+  }
+  const bookQuery = { 
+    title: bookSearchChoice.volumeInfo.title,
+    author: author,
+    published: bookSearchChoice.volumeInfo.publishedDate.slice(0,4),
+    image: bookSearchChoice.volumeInfo.imageLinks.thumbnail,
+    urlInfo: bookSearchChoice.volumeInfo.infoLink,
+    description: bookSearchChoice.volumeInfo.description,
+    isbn: bookSearchChoice.volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier 
+  }
+  //posts to books, to return book id
+  const postObject = {
+    userId: user.id,
+    groupName: createBookClubName,
+    bookId: null,
+  }
+  axios.post('/books/googleapi', {
+    query: bookQuery,
+  })
+  .then((response)=>{
+    postObject.bookId = response.data[0].id
+  })
+  .catch((err) =>{
+    console.log('error, line 149 index.jsx')
+  })
+  .then(()=>{
+    axios.post('/groups', {
+      data: postObject,
+    })
+    .then((response)=>{
+      console.log(response, 'group saved to database');
+      // this.setState({
+      //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
+      // })                                       //to reflect newly added bookClub
+    })
+    .catch((err)=>{
+      console.log('club NOT added to database')
+    })
+  })
+}
+  //function selects currentBook when creating a new group
+  selectBook (book) {
+    this.setState({
+      bookSearchChoice: book, 
+    })
+  }
+
+  //function sets createBookClubName to input text when creating a new group
+  handleCreateBookClubName (e){
+    this.setState({
+      createBookClubName: e.target.value,
+    })
+  }
+
   
   render() {
-    const { loggedIn, bookClubs } = this.state;  // destructure state here
+    const { loggedIn, bookClubs, bookSearchInput, bookSearchResults} = this.state;  // destructure state here
     if (!loggedIn) {
-      return <LogIn handleLogIn={this.handleLogIn} />
+      return  <LogIn handleLogIn={this.handleLogIn} /> 
     } else {
       return (
-        <div>
-          <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
-          <TopBar chooseView={this.chooseView} />
-          {
-            this.renderMain()
-          }
-        </div>
+      <div>
+        <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
+        <TopBar chooseView={this.chooseView} 
+        handleBookSearchInput={ this.handleBookSearchInput } 
+        handleBookSearchSubmit={ this.handleBookSearchSubmit }
+        selectBook={ this.selectBook}
+        handleCreateBookClubName={ this.handleCreateBookClubName }
+        addBookClub={this.addBookClub}
+        bookSearchResults={ bookSearchResults }
+        bookSearchInput={ bookSearchInput }
+        />
+        {
+          this.renderMain()
+        }
+      </div>
       )
     }
   }
