@@ -1,5 +1,16 @@
 import React from 'react';
-import { Navbar, NavItem, Icon, Modal, TextInput, Button, Card, Row, Col, Textarea } from 'react-materialize'
+import {
+  Navbar,
+  NavItem,
+  Icon,
+  Modal,
+  TextInput,
+  Button,
+  Card,
+  Row,
+  Col,
+  Textarea
+} from 'react-materialize'
 
 const TopBar = ({
   chooseView,
@@ -10,7 +21,7 @@ const TopBar = ({
   handleCreateBookClubName,
   addBookClub,
   groupSearchResults, 
-  earchClubs,
+  searchClubs,
   handleClubSearch,
   groupSearchQuery,
   joinGroup,
@@ -49,7 +60,7 @@ const TopBar = ({
                     onClick={() => joinGroup(group.id)}
                     floating
                     large
-                    className="teal right"
+                    className="teal right modal-close"
                     style={{ marginTop: 'auto' }}
                     waves="light"
                     icon="add"
@@ -60,11 +71,6 @@ const TopBar = ({
           ))
         }
       </Modal>
-      <NavItem href="/">
-        <Icon>
-          add_circle_outline
-        </Icon>
-      </NavItem>
       <Modal header="Create a new club" trigger={ 
       <NavItem> 
         <Icon>add_circle_outline</Icon> 
@@ -89,7 +95,6 @@ const TopBar = ({
         <Textarea placeholder="Additional data about club here" />
         <Button className="modal-close" onClick={ addBookClub }>Create Club</Button>
       </Modal>  
-
       <NavItem href="/">
         <Icon>
           video_call
