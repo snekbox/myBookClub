@@ -1,7 +1,20 @@
 import React from 'react';
-import { Navbar, NavItem, Icon, Modal, TextInput, Button, Card, Row, Col } from 'react-materialize'
+import { Navbar, NavItem, Icon, Modal, TextInput, Button, Card, Row, Col, Textarea } from 'react-materialize'
 
-const TopBar = ({ chooseView, groupSearchResults, searchClubs, handleClubSearch, groupSearchQuery, joinGroup }) => (
+const TopBar = ({
+  chooseView,
+  handleBookSearchInput,
+  handleBookSearchSubmit,
+  bookSearchResults,
+  selectBook,
+  handleCreateBookClubName,
+  addBookClub,
+  groupSearchResults, 
+  earchClubs,
+  handleClubSearch,
+  groupSearchQuery,
+  joinGroup,
+  }) => (
   <div>
     <Navbar brand={<img src='../images/logo.png' className="logo" onClick={() => chooseView('groups')} />} alignLinks="right" className="light-blue">
       <NavItem onClick={() => chooseView('groups')} >
@@ -52,6 +65,31 @@ const TopBar = ({ chooseView, groupSearchResults, searchClubs, handleClubSearch,
           add_circle_outline
         </Icon>
       </NavItem>
+      <Modal header="Create a new club" trigger={ 
+      <NavItem> 
+        <Icon>add_circle_outline</Icon> 
+        </NavItem> 
+      }>
+        <h6> club owner: current user </h6>
+          <Modal header="select a book" trigger={ <Button> Select a book! </Button> }>
+          <TextInput placeholder="search for books" onChange={ (e) =>{ handleBookSearchInput(e) } }></TextInput>
+          <Button className="bookSearch" onClick={ ()=>{ handleBookSearchSubmit() } }>Search</Button>
+            {
+              bookSearchResults.map((book) =>{
+                  return <Card onClick={ ()=>{selectBook(book)} } key={book.id}>
+                  <h6>{book.volumeInfo.title}</h6>
+                  <Button className="modal-close">Select Book</Button>
+                  <img src={ book.volumeInfo.imageLinks.smallThumbnail}></img> 
+                  {book.volumeInfo.description} 
+                  </Card>
+              })
+              } 
+          </Modal>
+        <TextInput placeholder="Club Name" onChange={ (e)=>{handleCreateBookClubName(e)} }/>
+        <Textarea placeholder="Additional data about club here" />
+        <Button className="modal-close" onClick={ addBookClub }>Create Club</Button>
+      </Modal>  
+
       <NavItem href="/">
         <Icon>
           video_call
