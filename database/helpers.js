@@ -168,11 +168,10 @@ const getAllComments = (groupId, bookId) => {
 }
 
 const searchGroups = (query) => {
-    const q = query.query;
     return Group.findAll({
         where: {
             name: {
-                [Op.like]: `%${q}%`,
+                [Op.like]: `%${query}%`,
             },
         },
         include: [

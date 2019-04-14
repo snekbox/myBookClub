@@ -20,6 +20,8 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      groupSearchResults: [{name: '', book: {image: '', title: ''}, id: 0}],
+      groupSearchQuery: '',
       user: {
         "id": 1,
         "username": "Mark Maher",
@@ -34,6 +36,9 @@ class Landing extends React.Component {
     this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
     this.getGroups = this.getGroups.bind(this);
+    this.searchClubs = this.searchClubs.bind(this);
+    this.handleClubSearch = this.handleClubSearch.bind(this);
+    this.joinGroup = this.joinGroup.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +81,41 @@ class Landing extends React.Component {
       currentBook: book,
     })
   }
+
+  searchClubs (query) {
+    axios.get('/groups/search', {
+      params: {
+        query: query
+      }
+    })
+    .then((result) => {
+      const searchResults = result.data;
+      this.setState({
+        groupSearchResults: searchResults,
+      })
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
+  handleClubSearch (q) {
+    this.setState({
+      groupSearchQuery: q,
+    })
+  }
+
+  joinGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups', {
+      groupId,
+      userId: user.id,
+    })
+    .then( () => {
+      this.getGroups(user.id);
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
   
   handleLogIn () {
     this.getGroups(this.state.user.id);
@@ -83,14 +123,24 @@ class Landing extends React.Component {
   }
   
   render() {
-    const { loggedIn, bookClubs } = this.state;  // destructure state here
+    const { loggedIn, bookClubs, groupSearchResults, groupSearchQuery } = this.state;  // destructure state here
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />
     } else {
       return (
         <div>
-          <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
-          <TopBar chooseView={this.chooseView} />
+          <LeftBar 
+            book={bookClubs.length ? bookClubs[0].book : {}}
+            club={bookClubs[0]}
+            />
+          <TopBar 
+            chooseView={this.chooseView}
+            groupSearchResults={groupSearchResults}
+            groupSearchQuery={groupSearchQuery}
+            handleClubSearch={this.handleClubSearch}
+            searchClubs={this.searchClubs}
+            joinGroup={this.joinGroup}
+            />
           {
             this.renderMain()
           }

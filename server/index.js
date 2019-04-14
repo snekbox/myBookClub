@@ -53,12 +53,23 @@ app.get('/groups', (req, res) => {
 })
 
 app.get('/groups/search', (req, res) => {
-  searchGroups(req.body)
+  const { query } = req.query;  
+  searchGroups(query)
     .then((result) => {
       res.send(result);
     }).catch((err) => {
       console.error(err);
     });
+})
+
+app.patch('/groups', (req, res) => {
+  const { userId, groupId } = req.body;
+  addUserToGroup(userId, groupId)
+  .then((result) => {
+    res.send(result.data);
+  }).catch((err) => {
+    console.error(err);
+  });
 })
 
 app.post('/groups', (req, res) => {
