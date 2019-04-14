@@ -203,7 +203,10 @@ const searchGroups = query => {
         [Op.like]: `%${query}%`,
       },
     },
-    include: [{ model: User }, { model: Book }],
+    include: [
+      { model: User },
+      { model: Book }
+    ],
   })
     .then(result => {
       return result;
@@ -212,6 +215,19 @@ const searchGroups = query => {
       return err;
     });
 };
+
+const deleteGroup = groupId => {
+  return Group.destroy({
+    where: {
+      id: groupId,
+    }
+  })
+  .then((result) => {
+    return result;
+  }).catch((err) => {
+    return err;
+  });
+}
 
 module.exports = {
   verifyUser,
@@ -226,4 +242,5 @@ module.exports = {
   addComment,
   getAllComments,
   searchGroups,
+  deleteGroup,
 };

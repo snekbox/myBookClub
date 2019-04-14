@@ -23,6 +23,8 @@ class User extends Model {}
 User.init({
   username: { type: Sequelize.STRING, allowNull: false,  },
   email: {type: Sequelize.STRING, allowNull: false, },
+  googleId: { type: Sequelize.STRING, allowNull: false,  },
+  token: { type: Sequelize.STRING, allowNull: false,  },
 }, {
   sequelize,
   modelName: 'user',

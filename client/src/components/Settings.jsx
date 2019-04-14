@@ -12,10 +12,13 @@ const Settings = ({ clubs }) => {
                 <h5>Your Groups</h5>
               </Row>
               {clubs.map(club => (
-                <Row>
+                <Row key={club.id}>
                   <Col s={8}>{club.name}</Col>
-                  <Col s={4}>
+                  <Col s={2}>
                     <Icon>delete</Icon>
+                  </Col>
+                  <Col s={2}>
+                    <Icon>remove</Icon>
                   </Col>
                 </Row>
               ))}
