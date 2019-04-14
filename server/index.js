@@ -1,9 +1,9 @@
+/* eslint-disable prettier/prettier */
 require('dotenv').config();
 const axios = require('axios');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const db = require('../database');
 const { json } = require('../database/sample-data/sample.js')
 const { verifyUser,
   createNewGroup,
@@ -18,22 +18,13 @@ const { verifyUser,
   getAllComments,
   searchGroups,
   googleBooksApiData,
+  deleteGroup,
 } = require('../database/helpers')
 
 const app = express();
 app.use(bodyParser());
 app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(bodyParser.json());
-
-app.get('/', (req, res) => {
-  items.selectAll((err, data) => {
-    if (err) {
-      res.sendStatus(500);
-    } else {
-      res.json(data);
-    }
-  });
-});
 
 app.get('/books/googleapi', (req, res)=>{
   const {query} = req.query
@@ -48,10 +39,10 @@ app.get('/books/googleapi', (req, res)=>{
     }
   })
   .then((searchResults)=>{
-    //send back searchResults to client, so they can choose a book.
+    // send back searchResults to client, so they can choose a book.
     res.json(searchResults.data.items);
-    //chosen book, will be sent via the body of a post request to the server
-    //and stored in database
+    // chosen book, will be sent via the body of a post request to the server
+    // and stored in database
   })
   .catch((err)=>{
     res.json(err);
@@ -62,9 +53,9 @@ app.post('/books/googleapi', (req, res) => {
   const { isbn, title, author, published, description, urlInfo, image } = req.body.query;
   addOrFindBook(isbn, title, author, published, description, urlInfo, image)
     .then((book) => {
-      res.json(book); //sends book back, so book ID can be used for purpose of adding groups
+      res.json(book); // sends book back, so book ID can be used for purpose of adding groups
     }).catch((err) => {
-      console.error('big fat error tho lulz');
+      console.error(err);
     });
 })
 
@@ -98,6 +89,16 @@ app.patch('/groups', (req, res) => {
   });
 })
 
+app.patch('/groups/delete', (req, res) => {
+  const { groupId } = req.body;
+  deleteGroup(groupId)
+  .then((result) => {
+    res.send(result.data);
+  }).catch((err) => {
+    console.error(err);
+  });
+})
+
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body.data;
   return createNewGroup(userId, groupName, bookId)
@@ -124,7 +125,7 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/test', (req, res) => {
-  res.json(googleBooksApiData); //sending back book data for book club creation test
+  res.json(googleBooksApiData); // sending back book data for book club creation test
   // See below for things to store in the database and their relative paths
   // Title:         json.items[i].volumeInfo.title
   // Authors:       json.items[i].volumeInfo.authors
