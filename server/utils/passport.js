@@ -14,10 +14,10 @@ module.exports = function() {
       function(accessToken, refreshToken, profile, done) {
         return verifyUser(accessToken, refreshToken, profile)
           .then(result => {
-            done(result);
+            done(null, result[0]);
           })
           .catch(err => {
-            done(err);
+            done(err, null);
           });
       },
     ),

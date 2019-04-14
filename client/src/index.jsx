@@ -52,7 +52,13 @@ class Landing extends React.Component {
   }
 
   componentDidMount() {
-    // Initial loading logic will go here
+    console.log(boffo);
+    axios.get('/login') 
+    .then((result) => {
+      console.log(result);
+    }).catch((err) => {
+      
+    });
   }
 
   getGroups(userId) {
@@ -123,23 +129,37 @@ class Landing extends React.Component {
   }
 
   handleLogIn(response) {
-    const tokenBlob = new Blob(
-      [JSON.stringify({ access_token: response.accessToken }, null, 2)],
-      { type: 'application/json' },
-    );
-    const options = {
-      body: tokenBlob,
-      mode: 'cors',
-      cache: 'default',
-    };
-    axios.post('/connect/google', options).then(r => {
-      const token = r.headers.get('x-auth-token');
-      r.json().then(user => {
-        if (token) {
-          this.setState({ loggedIn: true, user, token });
-        }
-      });
-    });
+    // console.log(response);
+    // const tokenBlob = new Blob(
+    //   [JSON.stringify({ access_token: response.accessToken }, null, 2)],
+    //   { type: 'application/json' },
+    // );
+    // console.log(tokenBlob);
+    // const options = {
+    //   body: response,
+    //   mode: 'cors',
+    //   cache: 'default',
+    // };
+    // axios.post('/connect', options).then(r => {
+    //   const token = r.headers.get('x-auth-token');
+    //   r.json().then(user => {
+    //     if (token) {
+    //       this.setState({ loggedIn: true, user, token });
+    //     }
+    //   });
+    // });
+    axios
+      .post('/connect', {
+        access_token: response.accessToken,
+        profile: response.profileObj,
+      })
+      .then(result => {
+        this.setState({ loggedIn: true, user: result.data });
+        return result.data
+      }).then(result => {
+        this.getGroups(this.state.user.id);
+      })
+      .catch(err => {});
   }
 
   logout() {

@@ -1,13 +1,20 @@
+/* eslint-disable func-names */
 /* eslint-disable prettier/prettier */
 require('dotenv').config();
 const axios = require('axios');
 const express = require('express');
 const path = require('path');
+const passport = require('passport');
+require('./utils/passport')();
 const cookieParser = require('cookie-parser');
+const request = require('request');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const config = require('./utils/config')
 const db = require('../database');
+const session = require("express-session");
 const { json } = require('../database/sample-data/sample.js');
+const { generateToken, sendToken } = require ('./utils/utils2/token.utils')
 const {
   verifyUser,
   createNewGroup,
@@ -23,9 +30,13 @@ const {
   searchGroups,
   googleBooksApiData,
   deleteGroup,
+  deseralizeUser,
 } = require('../database/helpers')
 
+
+
 const app = express();
+
 const corsOption = {
   origin: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -38,17 +49,52 @@ app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ secret: "cats" }));
 app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// app.get('/', (req, res) => {
-//   items.selectAll((err, data) => {
-//     if (err) {
-//       res.sendStatus(500);
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// });
+// app.post('/connect/google', passport.authenticate('google-token', {session: false}),
+// function(req, res, next) {
+//   if (!req.user) {
+//       return res.send(401, 'User Not Authenticated');
+//   }
+//   req.auth = {
+//       id: req.user.id
+//   };
+
+//   next();
+// },generateToken, sendToken)
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  deseralizeUser(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+app.post('/connect', passport.authenticate('google-token'),
+ function(req, res) {
+  res.send(req.user);
+});
+
+// app.get('/connect', passport.authenticate('google-token'),
+//   function(req, res) {
+//     res.send(req.user);
+//   }
+// )
+
+app.get('/login', passport.deserializeUser, (req, res, next) => {
+  console.log(req.user);
+  res.send('wdawdaw')
+})
+
+app.get('/connect/google', (req, res, next) => {
+  console.log('dwadawda')
+  res.send('wdawdaw')
+})
 
 app.get('/books/googleapi', (req, res)=>{
   const {query} = req.query
