@@ -14,7 +14,7 @@ const LogIn = ({ handleLogIn }) => (
       <GoogleLogin
           clientId="895874481709-h8tt80hof6t6un9nb713lcs33g2m3v29.apps.googleusercontent.com"
           buttonText="Login with Google"
-          onSuccess={(response) => handleLogIn(response)}
+          onSuccess={(response) => console.log(response)}
           onFailure={(response) => console.log(response)}
           cookiePolicy={'single_host_origin'}
         />
