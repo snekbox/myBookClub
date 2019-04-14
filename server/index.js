@@ -16,7 +16,8 @@ const { verifyUser,
   getGroupBooks,
   addComment,
   getAllComments,
-  googleBooksApiData
+  searchGroups,
+  googleBooksApiData,
 } = require('../database/helpers')
 
 const app = express();
@@ -77,6 +78,26 @@ app.get('/groups', (req, res) => {
     });
 })
 
+app.get('/groups/search', (req, res) => {
+  const { query } = req.query;  
+  searchGroups(query)
+    .then((result) => {
+      res.send(result);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.patch('/groups', (req, res) => {
+  const { userId, groupId } = req.body;
+  addUserToGroup(userId, groupId)
+  .then((result) => {
+    res.send(result.data);
+  }).catch((err) => {
+    console.error(err);
+  });
+})
+
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body.data;
   return createNewGroup(userId, groupName, bookId)
@@ -86,6 +107,17 @@ app.post('/groups', (req, res) => {
     }).then((newGroup) => {
       console.log(newGroup, 'new Group')
       res.json(newGroup);
+    }).catch((err) => {
+      console.error(err);
+    });
+})
+
+app.post('/login', (req, res) => {
+  const { email, givenName, familyName } = req.body.user;
+  verifyUser(email, `${givenName} ${familyName}`)
+    .then((response) => {
+      const userObj = response[0];
+      res.send(userObj);
     }).catch((err) => {
       console.error(err);
     });

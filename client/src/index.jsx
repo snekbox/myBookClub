@@ -20,6 +20,8 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      groupSearchResults: [{name: '', book: {image: '', title: ''}, id: 0}],
+      groupSearchQuery: '',
       bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
       bookSearchInput: '', //handles book search input when creating group
       bookSearchChoice: null,
@@ -45,6 +47,9 @@ class Landing extends React.Component {
     this.addBookClub = this.addBookClub.bind(this); // formats book club input, adds book club to bookClubs array
     this.handleCreateBookClubName = this.handleCreateBookClubName.bind(this);
     this.getGroups = this.getGroups.bind(this);
+    this.searchClubs = this.searchClubs.bind(this);
+    this.handleClubSearch = this.handleClubSearch.bind(this);
+    this.joinGroup = this.joinGroup.bind(this);
   }
 
   componentDidMount() {
@@ -86,6 +91,41 @@ class Landing extends React.Component {
       currentClub: club,
       currentBook: book,
     })
+  }
+
+  searchClubs (query) {
+    axios.get('/groups/search', {
+      params: {
+        query: query
+      }
+    })
+    .then((result) => {
+      const searchResults = result.data;
+      this.setState({
+        groupSearchResults: searchResults,
+      })
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
+
+  handleClubSearch (q) {
+    this.setState({
+      groupSearchQuery: q,
+    })
+  }
+
+  joinGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups', {
+      groupId,
+      userId: user.id,
+    })
+    .then( () => {
+      this.getGroups(user.id);
+    }).catch((err) => {
+      console.error(err);
+    });
   }
   
   handleLogIn () {
@@ -187,26 +227,43 @@ addBookClub () {
 
   
   render() {
-    const { loggedIn, bookClubs, bookSearchInput, bookSearchResults} = this.state;  // destructure state here
+    const { 
+      loggedIn,
+      bookClubs,
+      groupSearchResults,
+      groupSearchQuery,
+      bookSearchInput,
+      bookSearchResults,
+    } = this.state;  // destructure state here
+
     if (!loggedIn) {
       return  <LogIn handleLogIn={this.handleLogIn} /> 
     } else {
       return (
-      <div>
-        <LeftBar book={bookClubs.length ? bookClubs[0].book : {}} club={bookClubs[0]} />
-        <TopBar chooseView={this.chooseView} 
-        handleBookSearchInput={ this.handleBookSearchInput } 
-        handleBookSearchSubmit={ this.handleBookSearchSubmit }
-        selectBook={ this.selectBook}
-        handleCreateBookClubName={ this.handleCreateBookClubName }
-        addBookClub={this.addBookClub}
-        bookSearchResults={ bookSearchResults }
-        bookSearchInput={ bookSearchInput }
-        />
-        {
-          this.renderMain()
-        }
-      </div>
+        <div>
+          <LeftBar 
+            book={bookClubs.length ? bookClubs[0].book : {}}
+            club={bookClubs[0]}
+            />
+          <TopBar 
+            chooseView={this.chooseView}
+            groupSearchResults={groupSearchResults}
+            groupSearchQuery={groupSearchQuery}
+            handleClubSearch={this.handleClubSearch}
+            searchClubs={this.searchClubs}
+            joinGroup={this.joinGroup}
+            handleBookSearchInput={this.handleBookSearchInput}
+            handleBookSearchSubmit={this.handleBookSearchSubmit}
+            selectBook={this.selectBook}
+            handleCreateBookClubName={this.handleCreateBookClubName}
+            addBookClub={this.addBookClub}
+            bookSearchResults={bookSearchResults}
+            bookSearchInput={bookSearchInput}
+            />
+          {
+            this.renderMain()
+          }
+        </div>
       )
     }
   }

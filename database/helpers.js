@@ -1,4 +1,5 @@
-const {User, Group, Book, Comment, Note, BookGroup, UserBook, UserGroup} = require('./index.js')
+const { User, Group, Book, Comment, Note, BookGroup, UserBook, UserGroup } = require('./index.js')
+const { Op } = require('sequelize');
 
 //Check or Add new user to the database.
 //Then, retrieve all group data for that user
@@ -14,18 +15,18 @@ const verifyUser = (email, username) => {
 
 const getOwnerGroups = (userId) => {
     return Group.findAll({
-    where: {
-        userId: userId,
-    },
-    include: [
-        { model: User },
-        { model: Book }
-    ]
-}).then((result) => {
-    return result;
-}).catch((err) => {  
-    return err
-});
+        where: {
+            userId: userId,
+        },
+        include: [
+            { model: User },
+            { model: Book }
+        ]
+    }).then((result) => {
+        return result;
+    }).catch((err) => {
+        return err
+    });
 }
 
 const createNewGroup = (userId, groupName, bookId) => {
@@ -33,7 +34,7 @@ const createNewGroup = (userId, groupName, bookId) => {
         name: groupName,
         userId: userId,
         bookId: bookId || null,
-    }) .then((result) => {
+    }).then((result) => {
         return result;
     }).catch((err) => {
         return err;
@@ -44,14 +45,14 @@ const addOrFindBook = (isbn, title, author, published, description, urlInfo, ima
     return Book.findOrCreate({
         where: { isbn: isbn },
         defaults: {
-        title: title,
-        author: author,
-        published: published,
-        urlInfo: urlInfo,
-        description: description,
-        image: image,
+            title: title,
+            author: author,
+            published: published,
+            urlInfo: urlInfo,
+            description: description,
+            image: image,
         }
-    }) .then((result) => {
+    }).then((result) => {
         return result;
     }).catch((err) => {
         return err;
@@ -64,16 +65,16 @@ const getUserGroups = (userId) => {
         where: {
             userId: userId,
         },
-        include: [{ 
-                model: Group, 
-                include: [Book],
-            },
+        include: [{
+            model: Group,
+            include: [Book],
+        },
         ]
     }).then((result) => {
         let groups = result.map(group => {
             return group.group
         })
-        return groups; 
+        return groups;
     }).catch((err) => {
         return err;
     });
@@ -81,9 +82,9 @@ const getUserGroups = (userId) => {
 
 const addUserToGroup = (userId, groupId) => {
     return UserGroup.findOrCreate({
-        where: {userId: userId, groupId: groupId},
+        where: { userId: userId, groupId: groupId },
     }).then((result) => {
-        return result;  
+        return result;
     }).catch((err) => {
         return err;
     });
@@ -92,17 +93,17 @@ const addUserToGroup = (userId, groupId) => {
 const getGroupUsers = (groupId) => {
     return UserGroup.findAll({
         attributes: [],
-            where: {
-                groupId: groupId,
-            },
-            include: [
-                { model: User},
-            ]
+        where: {
+            groupId: groupId,
+        },
+        include: [
+            { model: User },
+        ]
     }).then((result) => {
         let users = result.map(user => {
             return user.user
         })
-        return users; 
+        return users;
     }).catch((err) => {
         return err;
     });
@@ -110,9 +111,9 @@ const getGroupUsers = (groupId) => {
 
 const addBookToGroup = (groupId, bookId) => {
     return BookGroup.findOrCreate({
-        where: {bookId: bookId, groupId: groupId},
+        where: { bookId: bookId, groupId: groupId },
     }).then((result) => {
-        return result;  
+        return result;
     }).catch((err) => {
         return err;
     });
@@ -121,17 +122,17 @@ const addBookToGroup = (groupId, bookId) => {
 const getGroupBooks = (groupId) => {
     return BookGroup.findAll({
         attributes: [],
-            where: {
-                groupId: groupId,
-            },
-            include: [
-                { model: Book},
-            ]
+        where: {
+            groupId: groupId,
+        },
+        include: [
+            { model: Book },
+        ]
     }).then((result) => {
         let book = result.map(book => {
             return book.book
         })
-        return book; 
+        return book;
     }).catch((err) => {
         return err;
     });
@@ -157,7 +158,7 @@ const getAllComments = (groupId, bookId) => {
             bookId: bookId,
         },
         include: [
-            {model: User}
+            { model: User }
         ]
     }).then((result) => {
         return result;
@@ -165,6 +166,25 @@ const getAllComments = (groupId, bookId) => {
         return err;
     });
 }
+
+const searchGroups = (query) => {
+    return Group.findAll({
+        where: {
+            name: {
+                [Op.like]: `%${query}%`,
+            },
+        },
+        include: [
+            { model: User },
+            { model: Book }
+        ]
+    }).then((result) => {
+        return result;
+    }).catch((err) => {
+        return err;
+    });
+}
+
 module.exports = {
     verifyUser,
     createNewGroup,
@@ -177,4 +197,5 @@ module.exports = {
     getGroupBooks,
     addComment,
     getAllComments,
+    searchGroups,
 }
