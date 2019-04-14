@@ -9,35 +9,28 @@ const Settings = ({ clubs }) => {
           <Col s={6} className="cyan lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
-                <h5>
-                  Your Groups
-              </h5>
+                <h5>Your Groups</h5>
               </Row>
-              {
-                clubs.map(club => (
-                  <Row>
-                    <Col s={8}>
-                      {club.name}
-                    </Col>
-                    <Col s={4}>
-                      <Icon>delete</Icon>
-                    </Col>
-                  </Row>
-                ))
-              }
+              {clubs.map(club => (
+                <Row key={club.id}>
+                  <Col s={8}>{club.name}</Col>
+                  <Col s={2}>
+                    <Icon>delete</Icon>
+                  </Col>
+                  <Col s={2}>
+                    <Icon>remove</Icon>
+                  </Col>
+                </Row>
+              ))}
             </div>
           </Col>
           <Col s={6} className="cyan lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
-                <h5>
-                  Other Settings
-              </h5>
+                <h5>Other Settings</h5>
               </Row>
               <Row>
-                <Col s={8}>
-                  Setting 1
-              </Col>
+                <Col s={8}>Setting 1</Col>
                 <Col s={4}>
                   <Icon>checkbox</Icon>
                 </Col>
@@ -46,7 +39,7 @@ const Settings = ({ clubs }) => {
           </Col>
         </Row>
       </div>
-    )
+    );
   } else {
     return (
       <div className="bodygrid cyan lighten-5">
@@ -54,26 +47,18 @@ const Settings = ({ clubs }) => {
           <Col s={6} className="cyan lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
-                <h5>
-                  Your Groups
-              </h5>
+                <h5>Your Groups</h5>
               </Row>
-              <Row>
-                Join some clubs!
-              </Row>
+              <Row>Join some clubs!</Row>
             </div>
           </Col>
           <Col s={6} className="cyan lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
-                <h5>
-                  Other Settings
-              </h5>
+                <h5>Other Settings</h5>
               </Row>
               <Row>
-                <Col s={8}>
-                  Setting 1
-              </Col>
+                <Col s={8}>Setting 1</Col>
                 <Col s={4}>
                   <Icon>checkbox</Icon>
                 </Col>
@@ -82,9 +67,8 @@ const Settings = ({ clubs }) => {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 };
-
 
 export default Settings;

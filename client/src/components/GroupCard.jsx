@@ -1,21 +1,19 @@
 import React from 'react';
-import { Row, Col } from 'react-materialize'
+import { Row, Col } from 'react-materialize';
 
 const GroupCard = ({ club, book }) => {
   if (book && club) {
     return (
       <div className="card small groupcard">
         <Row>
-          <h6 className="title">
-            {club.name}
-          </h6>
+          <h6 className="title">{club.name}</h6>
         </Row>
         <Row>
           <Col s={4} m={6} l={6} xl={6}>
-            <img src={book.image} className="book" />
+            <img src={book.image} className="book" alt="Book cover" />
           </Col>
           <Col s={4} m={6} l={6} xl={6}>
-            <div>"{book.title}"</div>
+            <div>{book.title}</div>
           </Col>
           <Col s={4} m={6} l={6} xl={6}>
             <div>{book.author}</div>
@@ -25,15 +23,10 @@ const GroupCard = ({ club, book }) => {
           </Col>
         </Row>
       </div>
-    )
+    );
   } else {
-    return (
-      <div className="card small groupcard">
-        Join some clubs!
-      </div>
-    )
+    return <div className="card small groupcard">Join some clubs!</div>;
   }
 };
-
 
 export default GroupCard;

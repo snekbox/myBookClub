@@ -17,9 +17,9 @@ class Landing extends React.Component {
     super(props);
 
     this.state = {
+      bookClubs,
       view: 'groups',
       loggedIn: false,
-      bookClubs: bookClubs,
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
@@ -59,12 +59,12 @@ class Landing extends React.Component {
     axios
       .get('/groups', {
         params: {
-          userId: userId,
+          userId,
         },
       })
-      .then(bookClubs => {
+      .then(response => {
         this.setState({
-          bookClubs: bookClubs.data,
+          bookClubs: response.data,
         });
       })
       .catch(err => {
@@ -87,7 +87,7 @@ class Landing extends React.Component {
     axios
       .get('/groups/search', {
         params: {
-          query: query,
+          query,
         },
       })
       .then(result => {
@@ -188,8 +188,8 @@ class Landing extends React.Component {
       author = bookSearchChoice.volumeInfo.authors.join(', ');
     }
     const bookQuery = {
+      author,
       title: bookSearchChoice.volumeInfo.title,
-      author: author,
       published: bookSearchChoice.volumeInfo.publishedDate.slice(0, 4),
       image: bookSearchChoice.volumeInfo.imageLinks.thumbnail,
       urlInfo: bookSearchChoice.volumeInfo.infoLink,
@@ -212,7 +212,7 @@ class Landing extends React.Component {
         postObject.bookId = response.data[0].id;
       })
       .catch(err => {
-        console.log('error, line 149 index.jsx');
+        console.log('error, line 149 index.jsx', err);
       })
       .then(() => {
         axios
@@ -226,7 +226,7 @@ class Landing extends React.Component {
             // })                                       //to reflect newly added bookClub
           })
           .catch(err => {
-            console.log('club NOT added to database');
+            console.log('club NOT added to database', err);
           });
       });
   }
@@ -262,8 +262,7 @@ class Landing extends React.Component {
           books={sampleData}
         />
       );
-    }
-    if (view === 'settings') {
+    } else if (view === 'settings') {
       return <Settings clubs={bookClubs} />;
     } else if (view === 'club view') {
       return <BookClubView club={currentClub} book={currentBook} />;
@@ -282,6 +281,31 @@ class Landing extends React.Component {
 
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />;
+    } else {
+      return (
+        <div>
+          <LeftBar
+            book={bookClubs.length ? bookClubs[0].book : {}}
+            club={bookClubs[0]}
+          />
+          <TopBar
+            chooseView={this.chooseView}
+            groupSearchResults={groupSearchResults}
+            groupSearchQuery={groupSearchQuery}
+            handleClubSearch={this.handleClubSearch}
+            searchClubs={this.searchClubs}
+            joinGroup={this.joinGroup}
+            handleBookSearchInput={this.handleBookSearchInput}
+            handleBookSearchSubmit={this.handleBookSearchSubmit}
+            selectBook={this.selectBook}
+            handleCreateBookClubName={this.handleCreateBookClubName}
+            addBookClub={this.addBookClub}
+            bookSearchResults={bookSearchResults}
+            bookSearchInput={bookSearchInput}
+          />
+          {this.renderMain()}
+        </div>
+      );
     }
     return (
       <div>
