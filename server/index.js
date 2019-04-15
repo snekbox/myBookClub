@@ -85,8 +85,11 @@ app.post('/connect', passport.authenticate('google-token'),
 //     res.send(req.user);
 //   }
 // )
+app.get('/', (req, res, next) => {
+  res.send(req.user);
+})
 
-app.get('/login', passport.deserializeUser, (req, res, next) => {
+app.get('/login', (req, res, next) => {
   console.log(req.user);
   res.send('wdawdaw')
 })

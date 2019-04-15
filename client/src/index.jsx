@@ -47,18 +47,19 @@ class Landing extends React.Component {
     this.searchClubs = this.searchClubs.bind(this);
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
-    this.logout = this.logout.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
   }
 
   componentDidMount() {
-    console.log(boffo);
-    axios.get('/login') 
-    .then((result) => {
-      console.log(result);
-    }).catch((err) => {
-      
-    });
+    let username = localStorage.getItem('username');
+    let email = localStorage.getItem('email');
+    let userId = localStorage.getItem('userId');
+    let token = localStorage.getItem('token');
+    let googleId = localStorage.getItem('googleId');
+    if (token) {
+      this.setState({user: {username: username, email: email, id: userId, googleId: googleId}, loggedIn: true, token: token})
+      this.getGroups(userId)
+    }
   }
 
   getGroups(userId) {
@@ -168,6 +169,12 @@ class Landing extends React.Component {
         profile: response.profileObj,
       })
       .then(result => {
+        console.log(result.data);
+        let username = localStorage.setItem('username', result.data.username);
+        let email = localStorage.setItem('email', result.data.email);
+        let userId = localStorage.setItem('userId', result.data.id);
+        let token = localStorage.setItem('token', result.data.token);
+        let googleId = localStorage.setItem('googleId', result.data.googleId);
         this.setState({ loggedIn: true, user: result.data });
         return result.data
       }).then(result => {
