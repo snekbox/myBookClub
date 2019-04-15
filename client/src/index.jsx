@@ -56,17 +56,27 @@ class Landing extends React.Component {
     this.handleCommentText = this.handleCommentText.bind(this); //handles changes in comment text
     this.submitComment = this.submitComment.bind(this); //handles clicking button to submit comments
     this.getGroupComments = this.getGroupComments.bind(this); //gets all comments in given group, for use in rendering comments on click of a group card
+    this.logout = this.logout.bind(this);
   }
 
   componentDidMount() {
-    let username = localStorage.getItem('username');
-    let email = localStorage.getItem('email');
-    let userId = localStorage.getItem('userId');
-    let token = localStorage.getItem('token');
-    let googleId = localStorage.getItem('googleId');
+    const username = localStorage.getItem('username');
+    const email = localStorage.getItem('email');
+    const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
+    const googleId = localStorage.getItem('googleId');
     if (token) {
-      this.setState({user: {username: username, email: email, id: userId, googleId: googleId}, loggedIn: true, token: token})
-      this.getGroups(userId)
+      this.setState({
+        user: {
+          username: username,
+          email: email,
+          id: userId,
+          googleId: googleId,
+        },
+        loggedIn: true,
+        token: token,
+      });
+      this.getGroups(userId);
       this.getAllGroups();
     }
   }
@@ -97,10 +107,10 @@ class Landing extends React.Component {
       })
       .then(result => {
         const results = result.data;
-        const autocompleteObject = {}
+        const autocompleteObject = {};
         results.forEach(group => {
           autocompleteObject[group.name] = group.book.image;
-        })
+        });
         this.setState({
           autocompleteObject,
         });
@@ -108,6 +118,12 @@ class Landing extends React.Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  logout() {
+    localStorage.clear();
+    this.setState({ loggedIn: false });
+    axios.get('/logout')
   }
 
   chooseView(view) {
@@ -172,53 +188,36 @@ class Landing extends React.Component {
       });
   }
 
-  deleteGroup (groupId) {
+  deleteGroup(groupId) {
     const { user } = this.state;
-    axios.patch('/groups/delete', {
-      groupId,
-    })
-    .then(() => {
-      this.getGroups(user.id);
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    axios
+      .patch('/groups/delete', {
+        groupId,
+      })
+      .then(() => {
+        this.getGroups(user.id);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
-  leaveGroup (groupId) {
+  leaveGroup(groupId) {
     const { user } = this.state;
-    axios.patch('/groups/removeUser', {
-      groupId,
-      userId: user.Id,
-    })
-    .then(() => {
-      this.getGroups(user.id);
-    })
-    .catch(err => {
-      console.error(err);
-    });
+    axios
+      .patch('/groups/removeUser', {
+        groupId,
+        userId: user.Id,
+      })
+      .then(() => {
+        this.getGroups(user.id);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   handleLogIn(response) {
-    // console.log(response);
-    // const tokenBlob = new Blob(
-    //   [JSON.stringify({ access_token: response.accessToken }, null, 2)],
-    //   { type: 'application/json' },
-    // );
-    // console.log(tokenBlob);
-    // const options = {
-    //   body: response,
-    //   mode: 'cors',
-    //   cache: 'default',
-    // };
-    // axios.post('/connect', options).then(r => {
-    //   const token = r.headers.get('x-auth-token');
-    //   r.json().then(user => {
-    //     if (token) {
-    //       this.setState({ loggedIn: true, user, token });
-    //     }
-    //   });
-    // });
     axios
       .post('/connect', {
         access_token: response.accessToken,
@@ -231,8 +230,9 @@ class Landing extends React.Component {
         let token = localStorage.setItem('token', result.data.token);
         let googleId = localStorage.setItem('googleId', result.data.googleId);
         this.setState({ loggedIn: true, user: result.data });
-        return result.data
-      }).then(result => {
+        return result.data;
+      })
+      .then(result => {
         this.getGroups(this.state.user.id);
       })
       .catch(err => {});
@@ -311,7 +311,7 @@ class Landing extends React.Component {
             data: postObject,
           })
           .then(response => {
-            this.getGroups(user.id)                //to reflect newly added bookClub
+            this.getGroups(user.id); //to reflect newly added bookClub
           })
           .catch(err => {
             console.error('club NOT added to database', err);
@@ -410,7 +410,7 @@ class Landing extends React.Component {
         clubs={bookClubs}
         deleteGroup={this.deleteGroup}
         leaveGroup={this.leaveGroup}
-        userId={user.id}
+        user={user}
       />;
     } else if (view === 'club view') {
       return <BookClubView 
@@ -439,12 +439,14 @@ class Landing extends React.Component {
 
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />;
-    } else {
+    } 
       return (
         <div>
           <LeftBar
             book={bookClubs.length ? bookClubs[0].book : {}}
             club={bookClubs[0]}
+            chooseView={this.chooseView}
+            chooseClub={this.chooseClub}
           />
           <TopBar
             chooseView={this.chooseView}
@@ -462,11 +464,12 @@ class Landing extends React.Component {
             bookSearchInput={bookSearchInput}
             autocompleteObject={autocompleteObject}
             bookSearchChoice={bookSearchChoice}
+            logout={this.logout}
           />
           {this.renderMain()}
         </div>
       );
-    }
+    
     // return (
     //   <div>
     //     <LeftBar

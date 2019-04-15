@@ -26,12 +26,12 @@ const GroupCard = ({ club, book, userId }) => {
         </Row>
         <Row>
           <Col className="title">
-            {book.title}
+            Current Book: "{book.title}"
           </Col>
         </Row>
         <Row>
           <Col>
-            {book.author}
+            By: {book.author}
           </Col>
         </Row>
         <Row>
