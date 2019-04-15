@@ -18,7 +18,7 @@ const Settings = ({ clubs, deleteGroup }) => {
                     <Button
                       onClick={() => deleteGroup(club.id)}
                       floating
-                      className="teal"
+                      className="red"
                       style={{ marginTop: 'auto' }}
                       waves="light"
                       icon="delete"
