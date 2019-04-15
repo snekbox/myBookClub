@@ -33,6 +33,8 @@ class Landing extends React.Component {
       user: null,
       token: '',
       autocompleteObject: {},
+      clubBookComments: [],
+      clubBookComment: '',
     };
 
     this.renderMain = this.renderMain.bind(this);
@@ -51,6 +53,9 @@ class Landing extends React.Component {
     this.joinGroup = this.joinGroup.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
     this.leaveGroup = this.leaveGroup.bind(this);
+    this.handleCommentText = this.handleCommentText.bind(this); //handles changes in comment text
+    this.submitComment = this.submitComment.bind(this); //handles clicking button to submit comments
+    this.getGroupComments = this.getGroupComments.bind(this); //gets all comments in given group, for use in rendering comments on click of a group card
     this.logout = this.logout.bind(this);
     this.addBookToGroup = this.addBookToGroup.bind(this);
   }
@@ -254,7 +259,6 @@ class Landing extends React.Component {
         );
       });
   }
-
   handleBookSearchInput(e) {
     // possible throttling of api calls here, when a few letters have been input
     // to help users pick books before they finish typing an entire book name
@@ -367,6 +371,55 @@ class Landing extends React.Component {
       });
   }
 
+  handleCommentText (text) { //handles individual comment's text
+    this.setState({
+      clubBookComment: text.target.value,
+    })
+  }
+
+  submitComment () {
+    //add comment to database(?) 
+    const {clubBookComment, user, currentBook, currentClub} = this.state;
+    const comment = {
+        commentText: clubBookComment,
+        userId: user.id, 
+        groupId: currentClub.id,
+        bookId: currentBook.id,
+    }
+    axios
+    .post('/groups/comments', {
+      query: {
+        comment,
+      }
+    })
+    .then((currentClubComments)=>{
+      this.setState({
+        clubBookComments: currentClubComments.data, //all comments on current group
+      });
+    })
+    .catch((err)=>{
+      console.error('did not add comment')
+    })
+  }
+
+  getGroupComments (group, book) {
+    axios.get('/groups/comments', {
+      params: {
+        groupId: group.id,
+        bookId: book.id,
+      }
+    })
+    .then((groupComments)=>{
+      this.setState({
+        clubBookComments: groupComments.data,
+      })
+    })
+    .catch((err)=>{
+      console.error('unable to retrieve books from this group, server responded with error')
+    })
+  } //sets clubBookComments to all comments for this given group/book
+
+
   renderMain() {
     const {
       view,
@@ -374,6 +427,8 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
+      clubBookComments, //all comments in a book club
+      clubBookComment,  //individual comment being added
       currentClubUsers,
       user,
       bookSearchChoice,
@@ -384,6 +439,7 @@ class Landing extends React.Component {
         <BodyGrid
           chooseView={this.chooseView}
           chooseClub={this.chooseClub}
+          getGroupComments={this.getGroupComments}
           clubs={bookClubs}
           books={sampleData}
           userId={user.id}
@@ -408,6 +464,10 @@ class Landing extends React.Component {
         bookSearchResults={bookSearchResults}
         selectBook={this.selectBook}
         bookSearchChoice={bookSearchChoice}
+        clubBookComments={clubBookComments} 
+        clubBookComment={clubBookComment} 
+        handleCommentText={this.handleCommentText} 
+        submitComment={this.submitComment}
       />;
     }
   }

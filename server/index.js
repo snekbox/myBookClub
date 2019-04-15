@@ -209,6 +209,7 @@ app.patch('/groups/book', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+  console.log(req.body, 'post to login')
   const { email, givenName, familyName } = req.body.user;
   verifyUser(email, `${givenName} ${familyName}`)
     .then(response => {
@@ -219,6 +220,48 @@ app.post('/login', (req, res) => {
       console.error(err);
     });
 });
+
+app.post('/groups/comments', (req, res)=>{
+  //adds comment to specific group's comment section
+  const {commentText, userId, groupId, bookId} = req.body.query.comment;
+  // addComment = (userId, groupId, bookId, comment)
+    addComment(userId, groupId, bookId, commentText)
+    .then(()=>{
+      getAllComments(groupId, bookId)
+      .then((allComments) =>{
+        res.json(allComments);
+      })
+      .catch((err)=>{
+        console.log(err, 'comments not retrieved from db');
+      })
+    })
+    .catch((err)=>{
+      console.log(err, 'comment not added to database, sorry')
+    })
+})
+
+app.get('/groups/comments', (req, res)=>{
+  const {groupId, bookId} = req.query;
+  getAllComments(groupId, bookId)
+  .then((groupComments)=>{
+    res.json(groupComments);
+  })
+  .catch((err)=>{
+    console.log(err, 'error, db was unable to retrieve comments')
+  })
+})
+
+app.get('/test', (req, res) => {
+  res.json(googleBooksApiData); // sending back book data for book club creation test
+  // See below for things to store in the database and their relative paths
+  // Title:         json.items[i].volumeInfo.title
+  // Authors:       json.items[i].volumeInfo.authors
+  // Publish Year:  json.items[i].volumeInfo.publishedDate.slice(0,4)
+  // Image:         json.items[i].volumeInfo.imageLinks.thumbnail
+  // Info URL:      json.items[i].volumeInfo.infoLink
+  // Description:   json.items[i].volumeInfo.description
+  // ISBN:          json.items[i].volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier
+})
 
 app.get('/logout', function (req, res){
   req.session.destroy(function (err) {

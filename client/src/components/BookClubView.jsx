@@ -6,11 +6,10 @@ import {
   Collection,
   CollectionItem,
   Card,
-  Pagination,
-  DatePicker,
-  Icon,
   Button,
+  Icon,
   Modal,
+  CardPanel,
 } from 'react-materialize';
 
 const BookClubView = ({
@@ -22,8 +21,9 @@ const BookClubView = ({
   handleBookSearchInput,
   handleBookSearchSubmit,
   bookSearchResults,
-  selectBook,
-  bookSearchChoice,
+  clubBookComments,
+  handleCommentText,
+  submitComment
 } ) => (
   <div className="bodygrid blue-grey lighten-5">
   <Row>
@@ -128,26 +128,50 @@ const BookClubView = ({
   </Row>
     <Row>
       <Col s={6}>
-      <h4> Add Comment</h4>
-      <TextInput icon="chat" placeholder="your comment here" /> 
+      <Modal trigger={
+          <Button>Add A Comment!</Button>
+        }>
+        <TextInput icon="chat" placeholder="your comment here" onChange={(input)=>{ handleCommentText(input) }} /> 
+              <Button className="modal-close" onClick={ submitComment }  >Add Comment</Button> 
+      </Modal>
+      </Col>
+      <Col s={6}>
+        <h5>Comments</h5>
       </Col>
     </Row>
     <Row>
       <Col s={12}>
-        <Collection header="Comments List">
-          <CollectionItem>
-            'I am a comment'
-          </CollectionItem>
-          <CollectionItem>
-            'I am another comment'
-          </CollectionItem>
-          <Pagination maxButtons={10} />
-        </Collection>
+      <div className='commentsSection'>
+            <Collection>
+                 {clubBookComments.map((comment)=>{ 
+                     return <CollectionItem 
+                     key={comment.id}
+                     
+                     > 
+                     <CardPanel>
+                       <Row>
+                         <Col s={4}>
+                     {`${comment.user.username}:`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={12}>
+                      {`${comment.comment}`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={6} className='offset-s7'>
+                         {`${new Date(comment.createdAt).toString().slice(0, 15)} at ${new Date(comment.createdAt).toLocaleTimeString()} `}
+                         </Col>
+                       </Row>
+                     </CardPanel>
+                     </CollectionItem>
+                 })}
+                </Collection>
+      </div>
       </Col>
     </Row>
   </div>
 )
 
 export default BookClubView;
-
-
