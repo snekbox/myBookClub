@@ -22,6 +22,7 @@ const TopBar = ({
   joinGroup,
   autocompleteObject,
   bookSearchChoice,
+  logout,
 }) => (
   <div>
     <Navbar
@@ -55,8 +56,8 @@ const TopBar = ({
         addBookClub={addBookClub}
         bookSearchChoice={bookSearchChoice}
       />
-      <NavItem href="/">
-        <Icon>video_call</Icon>
+      <NavItem onClick={() => logout()}>
+        <Icon>exit_to_app</Icon>
       </NavItem>
       <NavItem onClick={() => chooseView('settings')}>
         <Icon>settings</Icon>

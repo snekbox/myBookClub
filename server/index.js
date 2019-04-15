@@ -55,17 +55,6 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.post('/connect/google', passport.authenticate('google-token', {session: false}),
-// function(req, res, next) {
-//   if (!req.user) {
-//       return res.send(401, 'User Not Authenticated');
-//   }
-//   req.auth = {
-//       id: req.user.id
-//   };
-
-//   next();
-// },generateToken, sendToken)
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -78,25 +67,11 @@ passport.deserializeUser(function(id, done) {
 
 app.post('/connect', passport.authenticate('google-token'),
  function(req, res) {
-  res.send(req.user);
+   let user = req.user
+   req.session.destroy(function (err) {
+    res.send(user); //Inside a callback… bulletproof!
+  });  
 });
-
-// app.get('/connect', passport.authenticate('google-token'),
-//   function(req, res) {
-//     res.send(req.user);
-//   }
-// )
-app.get('/', (req, res, next) => {
-  res.send(req.user);
-})
-
-app.get('/login', (req, res, next) => {
-  res.send('wdawdaw')
-})
-
-app.get('/connect/google', (req, res, next) => {
-  res.send('wdawdaw')
-})
 
 app.get('/books/googleapi', (req, res)=>{
   const {query} = req.query
@@ -219,18 +194,13 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/test', (req, res) => {
-  res.json(googleBooksApiData); // sending back book data for book club creation test
-  // See below for things to store in the database and their relative paths
-  // Title:         json.items[i].volumeInfo.title
-  // Authors:       json.items[i].volumeInfo.authors
-  // Publish Year:  json.items[i].volumeInfo.publishedDate.slice(0,4)
-  // Image:         json.items[i].volumeInfo.imageLinks.thumbnail
-  // Info URL:      json.items[i].volumeInfo.infoLink
-  // Description:   json.items[i].volumeInfo.description
-  // ISBN:          json.items[i].volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier
+app.get('/logout', function (req, res){
+  req.session.destroy(function (err) {
+    res.redirect('/'); //Inside a callback… bulletproof!
+  });
 });
 
 app.listen(3000, () => {
   console.warn('listening on port 3000!');
 });
+
