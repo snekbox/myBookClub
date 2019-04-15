@@ -150,9 +150,27 @@ const addBookToGroup = (groupId, bookId) => {
   return BookGroup.findOrCreate({
     where: { bookId, groupId },
   })
-    .then(result => {
-      return result;
+    .then(() => {
+      return Group.update(
+        { bookId },
+        {where: {
+          id: groupId,
+        }}
+      )
     })
+    .then(() => {
+      return Group.findOne({
+        where: {
+          id: groupId,
+        },
+        include: [{
+          model: Book,
+        }]
+      })
+    })
+    .then(updatedGroup => 
+      updatedGroup
+    )
     .catch(err => {
       return err;
     });

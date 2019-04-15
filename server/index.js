@@ -66,9 +66,9 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.post('/connect', passport.authenticate('google-token'),
- function(req, res) {
-   let user = req.user
-   req.session.destroy(function (err) {
+  function(req, res) {
+  let user = req.user
+  req.session.destroy(function (err) {
     res.send(user);
   });  
 });
@@ -108,7 +108,7 @@ app.post('/books/googleapi', (req, res) => {
   } = req.body.query;
   addOrFindBook(isbn, title, author, published, description, urlInfo, image)
     .then((book) => {
-      res.json(book); // sends book back, so book ID can be used for purpose of adding groups
+      res.json(book[0]); // sends book back, so book ID can be used for purpose of adding groups
     }).catch((err) => {
       console.error(err);
     });
@@ -185,6 +185,21 @@ app.post('/groups', (req, res) => {
       addUserToGroup(userId, group.id);
       return group;
     })
+    .then(group => {
+      addBookToGroup(group.id, bookId);
+      return group;
+    })
+    .then(newGroup => {
+      res.json(newGroup);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+});
+
+app.patch('/groups/book', (req, res) => {
+  const { groupId, bookId } = req.body;
+  return addBookToGroup(groupId, bookId)
     .then(newGroup => {
       res.json(newGroup);
     })

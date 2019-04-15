@@ -52,6 +52,7 @@ class Landing extends React.Component {
     this.deleteGroup = this.deleteGroup.bind(this);
     this.leaveGroup = this.leaveGroup.bind(this);
     this.logout = this.logout.bind(this);
+    this.addBookToGroup = this.addBookToGroup.bind(this);
   }
 
   componentDidMount() {
@@ -329,6 +330,43 @@ class Landing extends React.Component {
     });
   }
 
+  addBookToGroup (groupId, book) {
+    const bookQuery = {
+      author: book.volumeInfo.authors.join(', '),
+      title: book.volumeInfo.title,
+      published: book.volumeInfo.publishedDate.slice(0, 4),
+      image: book.volumeInfo.imageLinks.thumbnail,
+      urlInfo: book.volumeInfo.infoLink,
+      description: book.volumeInfo.description,
+      isbn: book.volumeInfo.industryIdentifiers.filter(
+        id => id.type === 'ISBN_13',
+      )[0].identifier,
+    };
+    axios
+      .post('/books/googleapi', {
+        query: bookQuery,
+      })
+      .then(response => {
+        const bookObj = response.data;
+        return axios
+          .patch('/groups/book', {
+            groupId,
+            bookId: bookObj.id,
+        })
+      })
+      .then(results => {
+        const updatedGroup = results.data;
+        debugger;
+        this.setState({
+          currentClub: updatedGroup,
+          currentBook: updatedGroup.book,
+        })
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
   renderMain() {
     const {
       view,
@@ -338,6 +376,8 @@ class Landing extends React.Component {
       currentClub,
       currentClubUsers,
       user,
+      bookSearchChoice,
+      bookSearchResults,
     } = this.state;
     if (view === 'groups') {
       return (
@@ -361,6 +401,13 @@ class Landing extends React.Component {
         club={currentClub}
         book={currentBook}
         userList={currentClubUsers}
+        user={user}
+        addBookToGroup={this.addBookToGroup}
+        handleBookSearchInput={this.handleBookSearchInput}
+        handleBookSearchSubmit={this.handleBookSearchSubmit}
+        bookSearchResults={bookSearchResults}
+        selectBook={this.selectBook}
+        bookSearchChoice={bookSearchChoice}
       />;
     }
   }
@@ -409,31 +456,6 @@ class Landing extends React.Component {
           {this.renderMain()}
         </div>
       );
-    
-    return (
-      <div>
-        <LeftBar
-          book={bookClubs.length ? bookClubs[0].book : {}}
-          club={bookClubs[0]}
-        />
-        <TopBar
-          chooseView={this.chooseView}
-          groupSearchResults={groupSearchResults}
-          groupSearchQuery={groupSearchQuery}
-          handleClubSearch={this.handleClubSearch}
-          searchClubs={this.searchClubs}
-          joinGroup={this.joinGroup}
-          handleBookSearchInput={this.handleBookSearchInput}
-          handleBookSearchSubmit={this.handleBookSearchSubmit}
-          selectBook={this.selectBook}
-          handleCreateBookClubName={this.handleCreateBookClubName}
-          addBookClub={this.addBookClub}
-          bookSearchResults={bookSearchResults}
-          bookSearchInput={bookSearchInput}
-        />
-        {this.renderMain()}
-      </div>
-    );
   }
 }
 

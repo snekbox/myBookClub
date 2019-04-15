@@ -27,7 +27,7 @@ const ModalBookSearch = ({
             <h5>{bookSearchChoice.volumeInfo.title}</h5>
           </Row>
           <Row>
-            <h6>{bookSearchChoice.volumeInfo.authors.join(', ')}</h6>
+            {!bookSearchChoice.volumeInfo.authors ? <h6>{bookSearchChoice.volumeInfo.authors.join(', ')}</h6> : <div />}
           </Row>
           <Row>
             <Col s={4}>
