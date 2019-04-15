@@ -19,6 +19,7 @@ const { verifyUser,
   searchGroups,
   googleBooksApiData,
   deleteGroup,
+  removeUserFromGroup,
 } = require('../database/helpers')
 
 const app = express();
@@ -92,6 +93,16 @@ app.patch('/groups', (req, res) => {
 app.patch('/groups/delete', (req, res) => {
   const { groupId } = req.body;
   deleteGroup(groupId)
+  .then((result) => {
+    res.send(result.data);
+  }).catch((err) => {
+    console.error(err);
+  });
+})
+
+app.patch('/groups/removeUser', (req, res) => {
+  const { userId, groupId } = req.body;
+  removeUserFromGroup(userId, groupId)
   .then((result) => {
     res.send(result.data);
   }).catch((err) => {

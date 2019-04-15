@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Textarea,
+  Autocomplete,
 } from 'react-materialize';
 
 const TopBar = ({
@@ -49,7 +50,7 @@ const TopBar = ({
           </NavItem>
         }
       >
-        <TextInput
+        <Autocomplete
           icon="search"
           label="Bookclub Search"
           onChange={e => handleClubSearch(e.target.value)}

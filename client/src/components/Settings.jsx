@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Icon, Button } from 'react-materialize';
+import { Row, Col, Icon, Button, Card } from 'react-materialize';
 
 const Settings = ({ clubs, deleteGroup }) => {
   if (clubs.length) {
@@ -7,7 +7,7 @@ const Settings = ({ clubs, deleteGroup }) => {
       <div className="bodygrid cyan lighten-5">
         <Row>
           <Col s={6} className="cyan lighten-5">
-            <div className="card large groupcard">
+            <Card >
               <Row className="cardtitle">
                 <h5>Your Groups</h5>
               </Row>
@@ -40,10 +40,10 @@ const Settings = ({ clubs, deleteGroup }) => {
                   </Col>
                 </Row>
               ))}
-            </div>
+            </Card>
           </Col>
           <Col s={6} className="cyan lighten-5">
-            <div className="card large groupcard">
+            <Card >
               <Row className="cardtitle">
                 <h5>Other Settings</h5>
               </Row>
@@ -53,7 +53,7 @@ const Settings = ({ clubs, deleteGroup }) => {
                   <Icon>checkbox</Icon>
                 </Col>
               </Row>
-            </div>
+            </Card>
           </Col>
         </Row>
       </div>
