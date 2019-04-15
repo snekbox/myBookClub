@@ -4,7 +4,7 @@ import { Row, Col, Icon } from 'react-materialize';
 const GroupCard = ({ club, book, userId }) => {
   if (book && club) {
     return (
-      <div className="card medium groupcard">
+      <div className="card large groupcard">
         <Row>
           <Col s={10}>
             <h6 className="title">{club.name}</h6>
