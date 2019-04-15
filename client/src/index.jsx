@@ -42,7 +42,6 @@ class Landing extends React.Component {
     this.chooseView = this.chooseView.bind(this);
     this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
-
     this.handleBookSearchSubmit = this.handleBookSearchSubmit.bind(this);
     this.handleBookSearchInput = this.handleBookSearchInput.bind(this);
     this.bookSearch = this.bookSearch.bind(this); // api request to book api, returns X number of books that match search
@@ -53,6 +52,7 @@ class Landing extends React.Component {
     this.searchClubs = this.searchClubs.bind(this);
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
+    this.deleteGroup = this.deleteGroup.bind(this);
   }
 
   componentDidMount() {
@@ -125,6 +125,19 @@ class Landing extends React.Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  deleteGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups/delete', {
+      groupId
+    })
+    .then(() => {
+      this.getGroups(user.id);
+    })
+    .catch(err => {
+      console.error(err);
+    });
   }
 
   handleLogIn() {
@@ -246,7 +259,10 @@ class Landing extends React.Component {
         />
       );
     } else if (view === 'settings') {
-      return <Settings clubs={bookClubs} />;
+      return <Settings 
+        clubs={bookClubs}
+        deleteGroup={this.deleteGroup}
+      />;
     } else if (view === 'club view') {
       return <BookClubView club={currentClub} book={currentBook} />;
     }

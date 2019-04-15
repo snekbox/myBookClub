@@ -1,7 +1,7 @@
 import React from 'react';
-import { Row, Col, Icon } from 'react-materialize';
+import { Row, Col, Icon, Button } from 'react-materialize';
 
-const Settings = ({ clubs }) => {
+const Settings = ({ clubs, deleteGroup }) => {
   if (clubs.length) {
     return (
       <div className="bodygrid cyan lighten-5">
@@ -15,10 +15,28 @@ const Settings = ({ clubs }) => {
                 <Row key={club.id}>
                   <Col s={8}>{club.name}</Col>
                   <Col s={2}>
-                    <Icon>delete</Icon>
+                    <Button
+                      onClick={() => deleteGroup(club.id)}
+                      floating
+                      className="red"
+                      waves="light"
+                      icon="delete"
+                      style={{ marginTop: 'auto' }}
+                      tooltip="Delete group"
+                      tooltipOptions={{ position: 'left' }}
+                    />
                   </Col>
                   <Col s={2}>
-                    <Icon>remove</Icon>
+                    <Button
+                      onClick={() => deleteGroup(club.id)}
+                      floating
+                      className="teal"
+                      style={{ marginTop: 'auto' }}
+                      waves="light"
+                      icon="remove"
+                      tooltip="Leave group"
+                      tooltipOptions={{ position: 'right' }}
+                    />
                   </Col>
                 </Row>
               ))}
