@@ -96,6 +96,7 @@ class Landing extends React.Component {
       })
       .then(result => {
         const searchResults = result.data;
+        console.log(result);
         this.setState({
           groupSearchResults: searchResults,
         });
@@ -196,19 +197,16 @@ class Landing extends React.Component {
       .then(response => {
         postObject.bookId = response.data[0].id;
       })
-      .catch(err => {
-        console.log('error, line 149 index.jsx', err);
-      })
+      // .catch(err => {
+      //   console.log('error, line 149 index.jsx', err);
+      // })
       .then(() => {
         axios
           .post('/groups', {
             data: postObject,
           })
           .then(response => {
-            console.log(response, 'group saved to database');
-            // this.setState({
-            //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
-            // })                                       //to reflect newly added bookClub
+            this.getGroups(user.id)                                     //to reflect newly added bookClub
           })
           .catch(err => {
             console.log('club NOT added to database', err);
