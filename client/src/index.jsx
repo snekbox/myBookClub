@@ -37,7 +37,6 @@ class Landing extends React.Component {
     this.chooseView = this.chooseView.bind(this);
     this.chooseClub = this.chooseClub.bind(this);
     this.handleLogIn = this.handleLogIn.bind(this);
-
     this.handleBookSearchSubmit = this.handleBookSearchSubmit.bind(this);
     this.handleBookSearchInput = this.handleBookSearchInput.bind(this);
     this.bookSearch = this.bookSearch.bind(this); // api request to book api, returns X number of books that match search
@@ -49,6 +48,7 @@ class Landing extends React.Component {
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
     this.logout = this.logout.bind(this);
+    this.deleteGroup = this.deleteGroup.bind(this);
   }
 
   componentDidMount() {
@@ -98,6 +98,7 @@ class Landing extends React.Component {
       })
       .then(result => {
         const searchResults = result.data;
+        console.log(result);
         this.setState({
           groupSearchResults: searchResults,
         });
@@ -126,6 +127,19 @@ class Landing extends React.Component {
       .catch(err => {
         console.error(err);
       });
+  }
+
+  deleteGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups/delete', {
+      groupId
+    })
+    .then(() => {
+      this.getGroups(user.id);
+    })
+    .catch(err => {
+      console.error(err);
+    });
   }
 
   handleLogIn(response) {
@@ -160,10 +174,6 @@ class Landing extends React.Component {
         this.getGroups(this.state.user.id);
       })
       .catch(err => {});
-  }
-
-  logout() {
-    this.setState({ loggedIn: false, user: null, token: '' });
   }
 
   bookSearch(bookSearchQuery) {
@@ -231,19 +241,16 @@ class Landing extends React.Component {
       .then(response => {
         postObject.bookId = response.data[0].id;
       })
-      .catch(err => {
-        console.log('error, line 149 index.jsx', err);
-      })
+      // .catch(err => {
+      //   console.log('error, line 149 index.jsx', err);
+      // })
       .then(() => {
         axios
           .post('/groups', {
             data: postObject,
           })
           .then(response => {
-            console.log(response, 'group saved to database');
-            // this.setState({
-            //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
-            // })                                       //to reflect newly added bookClub
+            this.getGroups(user.id)                                     //to reflect newly added bookClub
           })
           .catch(err => {
             console.log('club NOT added to database', err);
@@ -283,7 +290,10 @@ class Landing extends React.Component {
         />
       );
     } else if (view === 'settings') {
-      return <Settings clubs={bookClubs} />;
+      return <Settings 
+        clubs={bookClubs}
+        deleteGroup={this.deleteGroup}
+      />;
     } else if (view === 'club view') {
       return <BookClubView club={currentClub} book={currentBook} />;
     }
