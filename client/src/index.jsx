@@ -23,14 +23,15 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
-      groupSearchResults: [{ name: '', book: { image: '', title: '' }, id: 0 }],
+      groupSearchResults: [],
       groupSearchQuery: '',
-      bookSearchResults: googleBooksApiData.items, // result that bookSearch yields, for use in choosing a book when creating a bookClub
+      bookSearchResults: [], // result that bookSearch yields, for use in choosing a book when creating a bookClub
       bookSearchInput: '', // handles book search input when creating group
       bookSearchChoice: null,
       createBookClubName: null,
       user: null,
       token: '',
+      autocompleteObject: {},
     };
 
     this.renderMain = this.renderMain.bind(this);
@@ -60,6 +61,7 @@ class Landing extends React.Component {
     if (token) {
       this.setState({user: {username: username, email: email, id: userId, googleId: googleId}, loggedIn: true, token: token})
       this.getGroups(userId)
+      this.getAllGroups();
     }
   }
 
@@ -73,6 +75,28 @@ class Landing extends React.Component {
       .then(response => {
         this.setState({
           bookClubs: response.data,
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  getAllGroups() {
+    axios
+      .get('/groups/search', {
+        params: {
+          query: '',
+        },
+      })
+      .then(result => {
+        const results = result.data;
+        const autocompleteObject = {}
+        results.forEach(group => {
+          autocompleteObject[group.name] = group.book.image;
+        })
+        this.setState({
+          autocompleteObject,
         });
       })
       .catch(err => {
@@ -308,6 +332,7 @@ class Landing extends React.Component {
           chooseClub={this.chooseClub}
           clubs={bookClubs}
           books={sampleData}
+          userId={user.id}
         />
       );
     } else if (view === 'settings') {
@@ -330,6 +355,8 @@ class Landing extends React.Component {
       groupSearchQuery,
       bookSearchInput,
       bookSearchResults,
+      autocompleteObject,
+      bookSearchChoice,
     } = this.state; // destructure state here
 
     if (!loggedIn) {
@@ -355,6 +382,8 @@ class Landing extends React.Component {
             addBookClub={this.addBookClub}
             bookSearchResults={bookSearchResults}
             bookSearchInput={bookSearchInput}
+            autocompleteObject={autocompleteObject}
+            bookSearchChoice={bookSearchChoice}
           />
           {this.renderMain()}
         </div>

@@ -4,9 +4,9 @@ import { Row, Col, Icon, Button, Card } from 'react-materialize';
 const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
   if (clubs.length) {
     return (
-      <div className="bodygrid cyan lighten-5">
+      <div className="bodygrid blue-grey lighten-5">
         <Row>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <Card >
               <Row className="cardtitle">
                 <h5>Your Groups</h5>
@@ -19,7 +19,7 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
                     <Button
                       onClick={() => deleteGroup(club.id)}
                       floating
-                      className="red"
+                      className="red accent-2"
                       waves="light"
                       icon="delete"
                       style={{ marginTop: 'auto' }}
@@ -38,7 +38,7 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
                     <Button
                       // onClick={() => leaveGroup(club.id)}   // This needs fixing.
                       floating
-                      className="teal"
+                      className="blue-grey darken-2"
                       style={{ marginTop: 'auto' }}
                       waves="light"
                       icon="remove"
@@ -50,7 +50,7 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
               ))}
             </Card>
           </Col>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <Card >
               <Row className="cardtitle">
                 <h5>Other Settings</h5>
@@ -68,9 +68,9 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
     );
   } else {
     return (
-      <div className="bodygrid cyan lighten-5">
+      <div className="bodygrid blue-grey lighten-5">
         <Row>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
                 <h5>Your Groups</h5>
@@ -78,7 +78,7 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
               <Row>Join some clubs!</Row>
             </div>
           </Col>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
                 <h5>Other Settings</h5>
