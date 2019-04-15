@@ -349,15 +349,13 @@ class Landing extends React.Component {
           userId={user.id}
         />
       );
-    } if (view === 'settings') {
-      return (
-        <Settings
-          clubs={bookClubs}
-          deleteGroup={this.deleteGroup}
-          leaveGroup={this.leaveGroup}
-          userId={user.id}
-        />
-      );
+    } else if (view === 'settings') {
+      return <Settings 
+        clubs={bookClubs}
+        deleteGroup={this.deleteGroup}
+        leaveGroup={this.leaveGroup}
+        user={user}
+      />;
     } else if (view === 'club view') {
       return <BookClubView 
         club={currentClub}
@@ -387,6 +385,8 @@ class Landing extends React.Component {
           <LeftBar
             book={bookClubs.length ? bookClubs[0].book : {}}
             club={bookClubs[0]}
+            chooseView={this.chooseView}
+            chooseClub={this.chooseClub}
           />
           <TopBar
             chooseView={this.chooseView}

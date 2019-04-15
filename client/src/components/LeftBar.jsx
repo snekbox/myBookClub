@@ -2,7 +2,7 @@ import React from 'react';
 import GroupCard from './GroupCard.jsx'
 import { Row, Col, CardPanel } from 'react-materialize'
 
-const LeftBar = ({ club, book }) => (
+const LeftBar = ({ club, book, chooseClub, chooseView }) => (
   <div className="leftbar blue-grey lighten-3">
     <Row>
       <Col s={12}>
@@ -11,9 +11,16 @@ const LeftBar = ({ club, book }) => (
           </h5>
       </Col>
     </Row>
-    <div className="card small">
-      <GroupCard className="next-meeting" club={club} book={book} />
-    </div>
+    <Col>
+      <GroupCard className="next-meeting"
+        club={club} 
+        book={book}
+        onClick={() => {
+          chooseView('club view');
+          chooseClub(club, book);
+        }
+      }/>
+    </Col>
   </div>
 );
 
