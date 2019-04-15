@@ -33,7 +33,7 @@ const TopBar = ({
         />
       }
       alignLinks="right"
-      className="light-blue"
+      className="blue-grey"
     >
       <NavItem onClick={() => chooseView('groups')}>
         <Icon>home</Icon>

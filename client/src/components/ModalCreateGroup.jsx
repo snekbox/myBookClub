@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalSearchBooks from './ModalSearchBooks.jsx';
+import ModalBookSearch from './ModalBookSearch.jsx';
 import {
   NavItem,
   Icon,
@@ -26,7 +26,7 @@ const ModalCreateGroup = ({
       </NavItem>
     }
   >
-    <ModalSearchBooks
+    <ModalBookSearch
       handleBookSearchInput={handleBookSearchInput}
       handleBookSearchSubmit={handleBookSearchSubmit}
       bookSearchResults={bookSearchResults}
@@ -43,12 +43,12 @@ const ModalCreateGroup = ({
       waves="light"
       onClick={addBookClub}
       large
-      className="teal right modal-close"
+      className="blue-grey darken-2 right modal-close"
       style={{ marginTop: 'auto' }}
     >
       Create Club
         <Icon right>
-        add
+          add
         </Icon>
     </Button>
   </Modal>

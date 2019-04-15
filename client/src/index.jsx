@@ -332,6 +332,7 @@ class Landing extends React.Component {
           chooseClub={this.chooseClub}
           clubs={bookClubs}
           books={sampleData}
+          userId={user.id}
         />
       );
     } else if (view === 'settings') {

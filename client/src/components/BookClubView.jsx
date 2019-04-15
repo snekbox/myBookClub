@@ -17,7 +17,7 @@ const BookClubView = ( { club, book } ) => (
     //pulls up public book notes, including username, message/note, time
     //10. X...
 
-    <div className="bodygrid cyan lighten-5">
+    <div className="bodygrid blue-grey lighten-5">
     <Row>
         <Col s={12}>
             <Card header={<h3>{club.name}</h3>}>

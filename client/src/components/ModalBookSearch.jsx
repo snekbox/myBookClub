@@ -9,7 +9,7 @@ import {
   Col,
 } from 'react-materialize';
 
-const ModalSearchBooks = ({
+const ModalBookSearch = ({
   handleBookSearchInput,
   handleBookSearchSubmit,
   bookSearchResults,
@@ -21,7 +21,7 @@ const ModalSearchBooks = ({
     header="select a book"
     trigger={
       !bookSearchChoice ?
-        <Button> Select a book! </Button>
+        <Button className="blue-grey darken-2"> Select a book! </Button>
         : <Card>
           <Row>
             <h5>{bookSearchChoice.volumeInfo.title}</h5>
@@ -41,12 +41,12 @@ const ModalSearchBooks = ({
                 waves="light"
                 onClick={() => selectBook(null)}
                 large
-                className="red right modal-close"
+                className="red accent-2 right modal-close"
                 style={{ marginTop: 'auto' }}
               >
                 Remove Book
               <Icon right>
-                  remove
+                remove
               </Icon>
               </Button>
             </Col>
@@ -59,7 +59,8 @@ const ModalSearchBooks = ({
       onChange={e => handleBookSearchInput(e)}
     />
     <Button
-      className="bookSearch"
+      className="blue-grey darken-2"
+      // className="bookSearch"
       onClick={() => handleBookSearchSubmit()}
     >
       Search
@@ -85,7 +86,7 @@ const ModalSearchBooks = ({
                 waves="light"
                 onClick={() => selectBook(book)}
                 large
-                className="teal right modal-close"
+                className="blue-grey darken-2 right modal-close"
                 style={{ marginTop: 'auto' }}
               >
                 Select Book
@@ -102,4 +103,4 @@ const ModalSearchBooks = ({
   </Modal>
   );
 
-export default ModalSearchBooks;
+export default ModalBookSearch;

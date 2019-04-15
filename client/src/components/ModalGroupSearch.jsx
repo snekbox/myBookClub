@@ -33,7 +33,7 @@ const ModalGroupSearch = ({
       label="Bookclub Search"
       onChange={e => handleClubSearch(e.target.value)}
     />
-    <Button onClick={() => searchClubs(groupSearchQuery)}>Search</Button>
+      <Button onClick={() => searchClubs(groupSearchQuery)} className="blue-grey darken-2" >Search</Button>
     {groupSearchResults.length ?
       groupSearchResults.map(group => (
         <Card key={group.id}>
@@ -52,12 +52,12 @@ const ModalGroupSearch = ({
                 waves="light"
                 onClick={() => joinGroup(group.id)}
                 large
-                className="teal right modal-close"
+                className="blue-grey darken-2 right modal-close"
                 style={{ marginTop: 'auto' }}
               >
                 Join Group
             <Icon right>
-                  add
+              add
             </Icon>
               </Button>
             </Col>
