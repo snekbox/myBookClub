@@ -231,21 +231,36 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.post('groups/comments', (req, res)=>{
-  console.log(req);
+app.post('/groups/comments', (req, res)=>{
   //adds comment to specific group's comment section
+  const {commentText, userId, groupId, bookId} = req.body.query.comment;
   // addComment = (userId, groupId, bookId, comment)
+    addComment(userId, groupId, bookId, commentText)
+    .then(()=>{
+      getAllComments(groupId, bookId)
+      .then((allComments) =>{
+        res.json(allComments);
+      })
+      .catch((err)=>{
+        console.log(err, 'comments not retrieved from db');
+      })
+    })
+    .catch((err)=>{
+      console.log(err, 'comment not added to database, sorry')
+    })
+})
 
-  // .then(()=>{
-    // getAllComments = (groupId, bookId) 
-    res.json('wee');
-  // })
-  // .catch((err)=>{
-  //   console.log(err, 'data was not added to group');
-  //   res.send('sorry, unable to add comment to database! - server/index.js line 232')
-  // })
-
-  //returns all comments for rendering on group's page
+app.get('/groups/comments', (req, res)=>{
+  console.log(req, 'req');
+  const {groupId, bookId} = req.query;
+  getAllComments(groupId, bookId)
+  .then((groupComments)=>{
+    console.log(groupComments);
+    res.json(groupComments);
+  })
+  .catch((err)=>{
+    console.log(err, 'error, db was unable to retrieve comments')
+  })
 })
 
 app.get('/test', (req, res) => {

@@ -33,7 +33,7 @@ class Landing extends React.Component {
       user: null,
       token: '',
       autocompleteObject: {},
-      clubBookComments: ['wee', 'im a comment too'],
+      clubBookComments: ['placeholder'],
       clubBookComment: '',
     };
 
@@ -55,6 +55,7 @@ class Landing extends React.Component {
     this.leaveGroup = this.leaveGroup.bind(this);
     this.handleCommentText = this.handleCommentText.bind(this); //handles changes in comment text
     this.submitComment = this.submitComment.bind(this); //handles clicking button to submit comments
+    this.getGroupComments = this.getGroupComments.bind(this); //gets all comments in given group, for use in rendering comments on click of a group card
   }
 
   componentDidMount() {
@@ -310,7 +311,7 @@ class Landing extends React.Component {
             data: postObject,
           })
           .then(response => {
-            this.getGroups(user.id)                                     //to reflect newly added bookClub
+            this.getGroups(user.id)                //to reflect newly added bookClub
           })
           .catch(err => {
             console.error('club NOT added to database', err);
@@ -341,27 +342,45 @@ class Landing extends React.Component {
   submitComment () {
     //add comment to database(?) 
     const {clubBookComment, user, currentBook, currentClub} = this.state;
-    axios
-    .post('groups/comments', {
-      query:{
-        comment: this.state.clubBookComment,
+    const comment = {
+        commentText: clubBookComment,
         userId: user.id, 
-        // groupId: ,
-        // bookId: ,
+        groupId: currentClub.id,
+        bookId: currentBook.id,
+    }
+    axios
+    .post('/groups/comments', {
+      query: {
+        comment,
       }
     })
-    // .then((currentClubComments)=>{
-    //   this.setState({
-    //     clubBookComments: currentClubComments,//all comments on this group, should be an array
-    //   });
-    // })
-    // .catch((err)=>{
-    //   console.err('did not add comment')
-    // })
-    //adds comment to state
+    .then((currentClubComments)=>{
+      this.setState({
+        clubBookComments: currentClubComments.data, //all comments on current group
+      });
+    })
+    .catch((err)=>{
+      console.error('did not add comment')
+    })
   }
 
-  //ALSO WHENEVER SOMEONE CHOOSES CLUB ==> GET REQUEST TO THAT CLUB'S COMMENTS SO ALL COMMENTS RENDER EVERY TIME SOMEONE CLICKS ON A CLUB
+  getGroupComments (group, book) {
+    axios.get('/groups/comments', {
+      params: {
+        groupId: group.id,
+        bookId: book.id,
+      }
+    })
+    .then((groupComments)=>{
+      this.setState({
+        clubBookComments: groupComments.data,
+      })
+    })
+    .catch((err)=>{
+      console.error('unable to retrieve books from this group, server responded with error')
+    })
+  } //sets clubBookComments to all comments for this given group/book
+
 
   renderMain() {
     const {
@@ -380,6 +399,7 @@ class Landing extends React.Component {
         <BodyGrid
           chooseView={this.chooseView}
           chooseClub={this.chooseClub}
+          getGroupComments={this.getGroupComments}
           clubs={bookClubs}
           books={sampleData}
           userId={user.id}
