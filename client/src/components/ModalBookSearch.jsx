@@ -60,7 +60,6 @@ const ModalBookSearch = ({
     />
     <Button
       className="blue-grey darken-2"
-      // className="bookSearch"
       onClick={() => handleBookSearchSubmit()}
     >
       Search
@@ -101,6 +100,6 @@ const ModalBookSearch = ({
       <div />
     }
   </Modal>
-  );
+);
 
 export default ModalBookSearch;

@@ -77,7 +77,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.post('/connect', passport.authenticate('google-token'),
- function(req, res) {
+  function(req, res) {
   res.send(req.user);
 });
 
@@ -135,6 +135,17 @@ app.post('/books/googleapi', (req, res) => {
     .then((book) => {
       res.json(book); // sends book back, so book ID can be used for purpose of adding groups
     }).catch((err) => {
+      console.error(err);
+    });
+});
+
+app.get('/users', (req, res) => {
+  const { groupId } = req.query;
+  getGroupUsers(groupId)
+    .then(result => {
+      res.send(result);
+    })
+    .catch(err => {
       console.error(err);
     });
 });

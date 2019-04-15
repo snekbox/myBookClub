@@ -23,6 +23,7 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      currentClubUsers: [],
       groupSearchResults: [],
       groupSearchQuery: '',
       bookSearchResults: [], // result that bookSearch yields, for use in choosing a book when creating a bookClub
@@ -113,10 +114,22 @@ class Landing extends React.Component {
   }
 
   chooseClub(club, book) {
-    this.setState({
-      currentClub: club,
-      currentBook: book,
-    });
+    axios
+      .get('/users', {
+        params: {
+          groupId: club.id,
+        },
+      })
+      .then((result) => {
+        const userList = result.data;
+        this.setState({
+          currentClub: club,
+          currentBook: book,
+          currentClubUsers: userList,
+        });
+      }).catch((err) => {
+        console.error(err);
+      });
   }
 
   searchClubs(query) {
@@ -359,6 +372,7 @@ class Landing extends React.Component {
       currentClub,
       clubBookComments, //all comments in a book club
       clubBookComment,  //individual comment being added
+      currentClubUsers,
       user,
     } = this.state;
     if (view === 'groups') {
@@ -379,7 +393,15 @@ class Landing extends React.Component {
         userId={user.id}
       />;
     } else if (view === 'club view') {
-      return <BookClubView club={currentClub} book={currentBook} clubBookComments={clubBookComments} clubBookComment={clubBookComment} handleCommentText={this.handleCommentText} submitComment={this.submitComment} />;
+      return <BookClubView 
+        club={currentClub}
+        book={currentBook}
+        userList={currentClubUsers}
+        clubBookComments={clubBookComments} 
+        clubBookComment={clubBookComment} 
+        handleCommentText={this.handleCommentText} 
+        submitComment={this.submitComment}
+      />;
     }
   }
 
@@ -425,30 +447,30 @@ class Landing extends React.Component {
         </div>
       );
     }
-    return (
-      <div>
-        <LeftBar
-          book={bookClubs.length ? bookClubs[0].book : {}}
-          club={bookClubs[0]}
-        />
-        <TopBar
-          chooseView={this.chooseView}
-          groupSearchResults={groupSearchResults}
-          groupSearchQuery={groupSearchQuery}
-          handleClubSearch={this.handleClubSearch}
-          searchClubs={this.searchClubs}
-          joinGroup={this.joinGroup}
-          handleBookSearchInput={this.handleBookSearchInput}
-          handleBookSearchSubmit={this.handleBookSearchSubmit}
-          selectBook={this.selectBook}
-          handleCreateBookClubName={this.handleCreateBookClubName}
-          addBookClub={this.addBookClub}
-          bookSearchResults={bookSearchResults}
-          bookSearchInput={bookSearchInput}
-        />
-        {this.renderMain()}
-      </div>
-    );
+    // return (
+    //   <div>
+    //     <LeftBar
+    //       book={bookClubs.length ? bookClubs[0].book : {}}
+    //       club={bookClubs[0]}
+    //     />
+    //     <TopBar
+    //       chooseView={this.chooseView}
+    //       groupSearchResults={groupSearchResults}
+    //       groupSearchQuery={groupSearchQuery}
+    //       handleClubSearch={this.handleClubSearch}
+    //       searchClubs={this.searchClubs}
+    //       joinGroup={this.joinGroup}
+    //       handleBookSearchInput={this.handleBookSearchInput}
+    //       handleBookSearchSubmit={this.handleBookSearchSubmit}
+    //       selectBook={this.selectBook}
+    //       handleCreateBookClubName={this.handleCreateBookClubName}
+    //       addBookClub={this.addBookClub}
+    //       bookSearchResults={bookSearchResults}
+    //       bookSearchInput={bookSearchInput}
+    //     />
+    //     {this.renderMain()}
+    //   </div>
+    // );
   }
 }
 
