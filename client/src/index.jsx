@@ -33,7 +33,7 @@ class Landing extends React.Component {
       user: null,
       token: '',
       autocompleteObject: {},
-      clubBookComments: ['placeholder'],
+      clubBookComments: [],
       clubBookComment: '',
     };
 

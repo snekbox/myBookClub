@@ -11,6 +11,7 @@ import {
   Button,
   Icon,
   Modal,
+  CardPanel,
 } from 'react-materialize';
 //const data = require('../../../database/sample-data/sample.js');
 const BookClubView = ( { club, book, userList, clubBookComments, handleCommentText, submitComment } ) => (
@@ -67,7 +68,28 @@ const BookClubView = ( { club, book, userList, clubBookComments, handleCommentTe
       <div className='commentsSection'>
             <Collection>
                  {clubBookComments.map((comment)=>{ 
-                     return <CollectionItem key={comment.id}> {comment.comment}</CollectionItem>
+                     return <CollectionItem 
+                     key={comment.id}
+                     
+                     > 
+                     <CardPanel>
+                       <Row>
+                         <Col s={4}>
+                     {`${comment.user.username}:`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={12}>
+                      {`${comment.comment}`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={6} className='offset-s7'>
+                         {`${new Date(comment.createdAt).toString().slice(0, 15)} at ${new Date(comment.createdAt).toLocaleTimeString()} `}
+                         </Col>
+                       </Row>
+                     </CardPanel>
+                     </CollectionItem>
                  })}
                 </Collection>
       </div>
