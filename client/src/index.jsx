@@ -301,7 +301,7 @@ class Landing extends React.Component {
         query: bookQuery,
       })
       .then(response => {
-        postObject.bookId = response.data[0].id;
+        postObject.bookId = response.data.id;
       })
       // .catch(err => {
       //   console.log('error, line 149 index.jsx', err);
