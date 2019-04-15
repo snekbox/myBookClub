@@ -36,7 +36,7 @@ const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
                   </Col>
                   <Col s={2}>
                     <Button
-                      // onClick={() => leaveGroup(club.id)}   // This needs fixing.
+                      onClick={() => leaveGroup(club.id)}   // This needs fixing.
                       floating
                       className="blue-grey darken-2"
                       style={{ marginTop: 'auto' }}
