@@ -360,7 +360,6 @@ class Landing extends React.Component {
       })
       .then(results => {
         const updatedGroup = results.data;
-        debugger;
         this.setState({
           currentClub: updatedGroup,
           currentBook: updatedGroup.book,
