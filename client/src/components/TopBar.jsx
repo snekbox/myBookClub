@@ -90,7 +90,6 @@ const TopBar = ({
           </NavItem>
         }
       >
-        <h6> club owner: current user </h6>
         <Modal
           header="select a book"
           trigger={<Button> Select a book! </Button>}
@@ -131,7 +130,6 @@ const TopBar = ({
             handleCreateBookClubName(e);
           }}
         />
-        <Textarea placeholder="Additional data about club here" />
         <Button className="modal-close" onClick={addBookClub}>
           Create Club
         </Button>

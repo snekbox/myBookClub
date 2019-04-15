@@ -1,21 +1,7 @@
 import React from 'react';
-import { Row, Col, TextInput, Collection, CollectionItem, Card, Pagination, DatePicker } from 'react-materialize';
-//const data = require('../../../database/sample-data/sample.js');
-const BookClubView = ( { club, book } ) => (
-    //0. renders this component when a book club is clicked
-    //1.on render, shows book title on top center of page
-    //2.on render, shows picture of book in top left of page
-    //3.on render, shows top X number of messages that fit the page
-    // in an aesthetically pleasing way
-    //4. Calendar --> button renders an embedded google calendar
-    //5. Message board (might be separate component, but the one for 
-    //this book needs to render so people can discuss)
-    //6. show X choices for next book, ability to vote
-    //7. vote on next book component
-    //8. Link to embedded video chat page, tokbox
-    //9. click on book in top-right or a specific button, 
-    //pulls up public book notes, including username, message/note, time
-    //10. X...
+import { Row, Col, TextInput, Collection, CollectionItem, Card, Button, Modal, Icon } from 'react-materialize';
+
+const BookClubView = ( { club, book, clubBookComment, clubBookComments, handleCommentText, submitComment } ) => (
 
     <div className="bodygrid cyan lighten-5">
     <Row>
@@ -32,22 +18,26 @@ const BookClubView = ( { club, book } ) => (
     </Row>
         <Row>
             <Col s={6}>
-            <h4> Add Comment</h4>
             <TextInput icon="chat" placeholder="your comment here" /> 
+            <Button>Comment</Button>
             </Col>
         </Row>
         <Row>
             <Col s={12}>
-                <Collection header="Comments List">
-                    <CollectionItem>
-                        'I am a comment'
-                    </CollectionItem>
-                    <CollectionItem>
-                        'I am another comment'
-                    </CollectionItem>
-                    <Pagination maxButtons={10} />
+                <Collection header="Comments">
+                {/* clubBookComments
+                clubBookComment
+                handleCommentText
+                submitComment */}
+                {/* for each comment in the current group's state, 
+                 collection item with comment text inside it 
+               
+               
+                 implement a scroll bar so comments fit on page if many of them*/}
+                 {clubBookComments.map((comment)=>{
+                     return <CollectionItem>{comment}</CollectionItem>;
+                 })}
                 </Collection>
-                
             </Col>
         </Row>
     </div>

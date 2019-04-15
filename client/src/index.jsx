@@ -29,6 +29,8 @@ class Landing extends React.Component {
       bookSearchInput: '', // handles book search input when creating group
       bookSearchChoice: null,
       createBookClubName: null,
+      clubBookComments: null,
+      clubBookComment: '',
       user: {
         id: 1,
         username: 'Mark Maher',
@@ -53,6 +55,8 @@ class Landing extends React.Component {
     this.searchClubs = this.searchClubs.bind(this);
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
+    this.handleCommentText = this.handleCommentText.bind(this);
+    this.submitComment = this.submitComment.bind(this);
   }
 
   componentDidMount() {
@@ -126,7 +130,8 @@ class Landing extends React.Component {
       });
   }
 
-  handleLogIn() {
+  handleLogIn(googleLoginInfo) {
+    // console.log(googleResponse.profileObj);
     this.getGroups(this.state.user.id);
     this.setState({ loggedIn: true });
   }
@@ -151,7 +156,6 @@ class Landing extends React.Component {
         );
       });
   }
-
   handleBookSearchInput(e) {
     // possible throttling of api calls here, when a few letters have been input
     // to help users pick books before they finish typing an entire book name
@@ -205,10 +209,7 @@ class Landing extends React.Component {
             data: postObject,
           })
           .then(response => {
-            console.log(response, 'group saved to database');
-            // this.setState({
-            //   bookClubs: bookClubs.concat(response), //when database is updated, state needs to be updated
-            // })                                       //to reflect newly added bookClub
+            this.setState({});
           })
           .catch(err => {
             console.log('club NOT added to database', err);
@@ -230,6 +231,14 @@ class Landing extends React.Component {
     });
   }
 
+  handleCommentText () {
+
+  }
+
+  submitComment () {
+
+  }
+
   renderMain() {
     const {
       view,
@@ -237,6 +246,8 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
+      clubBookComments,
+      clubBookComment,
     } = this.state;
     if (view === 'groups') {
       return (
@@ -250,7 +261,7 @@ class Landing extends React.Component {
     } else if (view === 'settings') {
       return <Settings clubs={bookClubs} />;
     } else if (view === 'club view') {
-      return <BookClubView club={currentClub} book={currentBook} />;
+      return <BookClubView club={currentClub} book={currentBook} clubBookComments={clubBookComments} clubBookComment={clubBookComment} handleCommentText={this.handleCommentText} submitComment={this.submitComment} />;
     }
   }
 

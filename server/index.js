@@ -79,30 +79,32 @@ app.get('/groups/search', (req, res) => {
     });
 })
 
-app.patch('/groups', (req, res) => {
-  const { userId, groupId } = req.body;
-  addUserToGroup(userId, groupId)
-  .then((result) => {
-    res.send(result.data);
-  }).catch((err) => {
-    console.error(err);
-  });
-})
+// app.patch('/groups', (req, res) => {
+//   const { userId, groupId } = req.body;
+//   addUserToGroup(userId, groupId)
+//   .then((result) => {
+//     res.send(result.data);
+//   }).catch((err) => {
+//     console.error(err);
+//   });
+// })
 
-app.patch('/groups/delete', (req, res) => {
-  const { groupId } = req.body;
-  deleteGroup(groupId)
-  .then((result) => {
-    res.send(result.data);
-  }).catch((err) => {
-    console.error(err);
-  });
-})
+// app.patch('/groups/delete', (req, res) => {
+//   const { groupId } = req.body;
+//   deleteGroup(groupId)
+//   .then((result) => {
+//     res.send(result.data);
+//   }).catch((err) => {
+//     console.error(err);
+//   });
+// })
 
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body.data;
-  return createNewGroup(userId, groupName, bookId)
+  console.log(req.body, 'reqbod')
+  createNewGroup(2, groupName, bookId)
     .then((group) => {
+      console.log(group, 'group')
       addUserToGroup(userId, group.id)
       return group;
     }).then((newGroup) => {
@@ -114,6 +116,7 @@ app.post('/groups', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+  console.log(req.body, 'post to login')
   const { email, givenName, familyName } = req.body.user;
   verifyUser(email, `${givenName} ${familyName}`)
     .then((response) => {
