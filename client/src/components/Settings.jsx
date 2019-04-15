@@ -1,13 +1,13 @@
 import React from 'react';
-import { Row, Col, Icon } from 'react-materialize';
+import { Row, Col, Icon, Button, Card } from 'react-materialize';
 
-const Settings = ({ clubs }) => {
+const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
   if (clubs.length) {
     return (
-      <div className="bodygrid cyan lighten-5">
+      <div className="bodygrid blue-grey lighten-5">
         <Row>
-          <Col s={6} className="cyan lighten-5">
-            <div className="card large groupcard">
+          <Col s={6} className="blue-grey lighten-5">
+            <Card >
               <Row className="cardtitle">
                 <h5>Your Groups</h5>
               </Row>
@@ -15,17 +15,43 @@ const Settings = ({ clubs }) => {
                 <Row key={club.id}>
                   <Col s={8}>{club.name}</Col>
                   <Col s={2}>
-                    <Icon>delete</Icon>
+                    {club.userId == userId ?
+                    <Button
+                      onClick={() => deleteGroup(club.id)}
+                      floating
+                      className="red accent-2"
+                      waves="light"
+                      icon="delete"
+                      style={{ marginTop: 'auto' }}
+                      tooltip="Delete group"
+                      tooltipOptions={{ position: 'left' }}
+                    />
+                    :<Button
+                      disabled
+                      floating
+                      icon="delete"
+                      style={{ marginTop: 'auto' }}
+                    />
+                  }
                   </Col>
                   <Col s={2}>
-                    <Icon>remove</Icon>
+                    <Button
+                      // onClick={() => leaveGroup(club.id)}   // This needs fixing.
+                      floating
+                      className="blue-grey darken-2"
+                      style={{ marginTop: 'auto' }}
+                      waves="light"
+                      icon="remove"
+                      tooltip="Leave group"
+                      tooltipOptions={{ position: 'right' }}
+                    />
                   </Col>
                 </Row>
               ))}
-            </div>
+            </Card>
           </Col>
-          <Col s={6} className="cyan lighten-5">
-            <div className="card large groupcard">
+          <Col s={6} className="blue-grey lighten-5">
+            <Card >
               <Row className="cardtitle">
                 <h5>Other Settings</h5>
               </Row>
@@ -35,16 +61,16 @@ const Settings = ({ clubs }) => {
                   <Icon>checkbox</Icon>
                 </Col>
               </Row>
-            </div>
+            </Card>
           </Col>
         </Row>
       </div>
     );
   } else {
     return (
-      <div className="bodygrid cyan lighten-5">
+      <div className="bodygrid blue-grey lighten-5">
         <Row>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
                 <h5>Your Groups</h5>
@@ -52,7 +78,7 @@ const Settings = ({ clubs }) => {
               <Row>Join some clubs!</Row>
             </div>
           </Col>
-          <Col s={6} className="cyan lighten-5">
+          <Col s={6} className="blue-grey lighten-5">
             <div className="card large groupcard">
               <Row className="cardtitle">
                 <h5>Other Settings</h5>

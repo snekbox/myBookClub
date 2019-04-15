@@ -12,10 +12,10 @@ const LogIn = ({ handleLogIn }) => (
   <Row>
     <Col s={12}>
       <GoogleLogin
-          clientId="895874481709-h8tt80hof6t6un9nb713lcs33g2m3v29.apps.googleusercontent.com"
+          clientId="832376083435-jk0sgf4ng8rsd3la3l2c92f7ccs36s2m.apps.googleusercontent.com"
           buttonText="Login with Google"
           onSuccess={(response) => handleLogIn(response)}
-          onFailure={(response) => console.log(response)}
+          onFailure={(response) => console.error(response)}
           cookiePolicy={'single_host_origin'}
         />
     </Col>

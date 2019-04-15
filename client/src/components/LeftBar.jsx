@@ -3,14 +3,12 @@ import GroupCard from './GroupCard.jsx'
 import { Row, Col, CardPanel } from 'react-materialize'
 
 const LeftBar = ({ club, book }) => (
-  <div className="leftbar cyan lighten-3">
+  <div className="leftbar blue-grey lighten-3">
     <Row>
       <Col s={12}>
-        <CardPanel className="teal">
-          <span className="white-text">
+          <h5 className="white-text">
             Next Meeting
-          </span>
-        </CardPanel>
+          </h5>
       </Col>
     </Row>
     <div className="card small">
