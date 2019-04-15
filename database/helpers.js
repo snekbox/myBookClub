@@ -239,6 +239,20 @@ const deleteGroup = groupId => {
     });
 };
 
+const removeUserFromGroup = (userId, groupId) => {
+  return UserGroup.destroy({
+    where: {
+      userId,
+      groupId,
+    }
+  })
+  .then((result) => {
+    return result;
+  }).catch((err) => {
+    return err;
+  });
+}
+
 module.exports = {
   verifyUser,
   createNewGroup,
@@ -253,5 +267,6 @@ module.exports = {
   getAllComments,
   searchGroups,
   deleteGroup,
+  removeUserFromGroup,
   deseralizeUser,
 };

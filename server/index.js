@@ -30,6 +30,7 @@ const {
   searchGroups,
   googleBooksApiData,
   deleteGroup,
+  removeUserFromGroup,
   deseralizeUser,
 } = require('../database/helpers')
 
@@ -90,12 +91,10 @@ app.get('/', (req, res, next) => {
 })
 
 app.get('/login', (req, res, next) => {
-  console.log(req.user);
   res.send('wdawdaw')
 })
 
 app.get('/connect/google', (req, res, next) => {
-  console.log('dwadawda')
   res.send('wdawdaw')
 })
 
@@ -183,6 +182,16 @@ app.patch('/groups/delete', (req, res) => {
   });
 })
 
+app.patch('/groups/removeUser', (req, res) => {
+  const { userId, groupId } = req.body;
+  removeUserFromGroup(userId, groupId)
+  .then((result) => {
+    res.send(result.data);
+  }).catch((err) => {
+    console.error(err);
+  });
+})
+
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body.data;
   return createNewGroup(userId, groupName, bookId)
@@ -191,7 +200,6 @@ app.post('/groups', (req, res) => {
       return group;
     })
     .then(newGroup => {
-      console.log(newGroup, 'new Group');
       res.json(newGroup);
     })
     .catch(err => {
@@ -224,5 +232,5 @@ app.get('/test', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('listening on port 3000!');
+  console.warn('listening on port 3000!');
 });

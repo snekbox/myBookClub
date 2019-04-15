@@ -48,6 +48,7 @@ class Landing extends React.Component {
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
+    this.leaveGroup = this.leaveGroup.bind(this);
   }
 
   componentDidMount() {
@@ -99,7 +100,6 @@ class Landing extends React.Component {
       })
       .then(result => {
         const searchResults = result.data;
-        console.log(result);
         this.setState({
           groupSearchResults: searchResults,
         });
@@ -133,7 +133,21 @@ class Landing extends React.Component {
   deleteGroup (groupId) {
     const { user } = this.state;
     axios.patch('/groups/delete', {
-      groupId
+      groupId,
+    })
+    .then(() => {
+      this.getGroups(user.id);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  }
+
+  leaveGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups/removeUser', {
+      groupId,
+      userId: user.Id,
     })
     .then(() => {
       this.getGroups(user.id);
@@ -169,7 +183,6 @@ class Landing extends React.Component {
         profile: response.profileObj,
       })
       .then(result => {
-        console.log(result.data);
         let username = localStorage.setItem('username', result.data.username);
         let email = localStorage.setItem('email', result.data.email);
         let userId = localStorage.setItem('userId', result.data.id);
@@ -197,7 +210,7 @@ class Landing extends React.Component {
         });
       })
       .catch(err => {
-        console.log(
+        console.error(
           err,
           'server responded with error: could not complete bookSearch request',
         );
@@ -260,7 +273,7 @@ class Landing extends React.Component {
             this.getGroups(user.id)                                     //to reflect newly added bookClub
           })
           .catch(err => {
-            console.log('club NOT added to database', err);
+            console.error('club NOT added to database', err);
           });
       });
   }
@@ -286,6 +299,7 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
+      user,
     } = this.state;
     if (view === 'groups') {
       return (
@@ -300,6 +314,8 @@ class Landing extends React.Component {
       return <Settings 
         clubs={bookClubs}
         deleteGroup={this.deleteGroup}
+        leaveGroup={this.leaveGroup}
+        userId={user.id}
       />;
     } else if (view === 'club view') {
       return <BookClubView club={currentClub} book={currentBook} />;
