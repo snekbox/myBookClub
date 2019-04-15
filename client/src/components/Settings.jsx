@@ -19,13 +19,24 @@ const Settings = ({ clubs, deleteGroup }) => {
                       onClick={() => deleteGroup(club.id)}
                       floating
                       className="red"
-                      style={{ marginTop: 'auto' }}
                       waves="light"
                       icon="delete"
+                      style={{ marginTop: 'auto' }}
+                      tooltip="Delete group"
+                      tooltipOptions={{ position: 'left' }}
                     />
                   </Col>
                   <Col s={2}>
-                    <Icon>remove</Icon>
+                    <Button
+                      onClick={() => deleteGroup(club.id)}
+                      floating
+                      className="teal"
+                      style={{ marginTop: 'auto' }}
+                      waves="light"
+                      icon="remove"
+                      tooltip="Leave group"
+                      tooltipOptions={{ position: 'right' }}
+                    />
                   </Col>
                 </Row>
               ))}
