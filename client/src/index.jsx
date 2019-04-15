@@ -55,8 +55,8 @@ class Landing extends React.Component {
     this.searchClubs = this.searchClubs.bind(this);
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
-    this.handleCommentText = this.handleCommentText.bind(this);
-    this.submitComment = this.submitComment.bind(this);
+    this.handleCommentText = this.handleCommentText.bind(this); //handles changes in comment text
+    this.submitComment = this.submitComment.bind(this); //handles clicking button to submit comments
   }
 
   componentDidMount() {
