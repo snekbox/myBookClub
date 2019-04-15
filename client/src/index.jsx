@@ -23,6 +23,7 @@ class Landing extends React.Component {
       sampleData: googleBooksApiData.items,
       currentClub: bookClubs[0],
       currentBook: googleBooksApiData.items[0],
+      currentClubUsers: [],
       groupSearchResults: [],
       groupSearchQuery: '',
       bookSearchResults: [], // result that bookSearch yields, for use in choosing a book when creating a bookClub
@@ -125,10 +126,22 @@ class Landing extends React.Component {
   }
 
   chooseClub(club, book) {
-    this.setState({
-      currentClub: club,
-      currentBook: book,
-    });
+    axios
+      .get('/users', {
+        params: {
+          groupId: club.id,
+        },
+      })
+      .then((result) => {
+        const userList = result.data;
+        this.setState({
+          currentClub: club,
+          currentBook: book,
+          currentClubUsers: userList,
+        });
+      }).catch((err) => {
+        console.error(err);
+      });
   }
 
   searchClubs(query) {
@@ -323,6 +336,7 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
+      currentClubUsers,
       user,
     } = this.state;
     if (view === 'groups') {
@@ -345,7 +359,11 @@ class Landing extends React.Component {
         />
       );
     } else if (view === 'club view') {
-      return <BookClubView club={currentClub} book={currentBook} />;
+      return <BookClubView 
+        club={currentClub}
+        book={currentBook}
+        userList={currentClubUsers}
+      />;
     }
   }
 

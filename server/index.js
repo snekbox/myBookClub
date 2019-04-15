@@ -69,7 +69,7 @@ app.post('/connect', passport.authenticate('google-token'),
  function(req, res) {
    let user = req.user
    req.session.destroy(function (err) {
-    res.send(user); //Inside a callback… bulletproof!
+    res.send(user);
   });  
 });
 
@@ -110,6 +110,17 @@ app.post('/books/googleapi', (req, res) => {
     .then((book) => {
       res.json(book); // sends book back, so book ID can be used for purpose of adding groups
     }).catch((err) => {
+      console.error(err);
+    });
+});
+
+app.get('/users', (req, res) => {
+  const { groupId } = req.query;
+  getGroupUsers(groupId)
+    .then(result => {
+      res.send(result);
+    })
+    .catch(err => {
       console.error(err);
     });
 });

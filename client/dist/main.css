@@ -54,3 +54,8 @@
 .ownericon {
   margin-top: 0.5rem;
 }
+
+.header {
+  padding-top: 2rem;
+  text-align: center;
+}
