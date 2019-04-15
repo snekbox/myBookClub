@@ -8,24 +8,13 @@ import {
   Card,
   Pagination,
   DatePicker,
-  Icon
+  Button,
+  Icon,
+  Modal,
+  CardPanel,
 } from 'react-materialize';
 //const data = require('../../../database/sample-data/sample.js');
-const BookClubView = ( { club, book, userList } ) => (
-  //0. renders this component when a book club is clicked
-  //1.on render, shows book title on top center of page
-  //2.on render, shows picture of book in top left of page
-  //3.on render, shows top X number of messages that fit the page
-  // in an aesthetically pleasing way
-  //4. Calendar --> button renders an embedded google calendar
-  //5. Message board (might be separate component, but the one for 
-  //this book needs to render so people can discuss)
-  //6. show X choices for next book, ability to vote
-  //7. vote on next book component
-  //8. Link to embedded video chat page, tokbox
-  //9. click on book in top-right or a specific button, 
-  //pulls up public book notes, including username, message/note, time
-  //10. X...
+const BookClubView = ( { club, book, userList, clubBookComments, handleCommentText, submitComment } ) => (
 
   <div className="bodygrid blue-grey lighten-5">
   <Row>
@@ -63,26 +52,50 @@ const BookClubView = ( { club, book, userList } ) => (
   </Row>
     <Row>
       <Col s={6}>
-      <h4> Add Comment</h4>
-      <TextInput icon="chat" placeholder="your comment here" /> 
+      <Modal trigger={
+          <Button>Add A Comment!</Button>
+        }>
+        <TextInput icon="chat" placeholder="your comment here" onChange={(input)=>{ handleCommentText(input) }} /> 
+              <Button className="modal-close" onClick={ submitComment }  >Add Comment</Button> 
+      </Modal>
+      </Col>
+      <Col s={6}>
+        <h5>Comments</h5>
       </Col>
     </Row>
     <Row>
       <Col s={12}>
-        <Collection header="Comments List">
-          <CollectionItem>
-            'I am a comment'
-          </CollectionItem>
-          <CollectionItem>
-            'I am another comment'
-          </CollectionItem>
-          <Pagination maxButtons={10} />
-        </Collection>
+      <div className='commentsSection'>
+            <Collection>
+                 {clubBookComments.map((comment)=>{ 
+                     return <CollectionItem 
+                     key={comment.id}
+                     
+                     > 
+                     <CardPanel>
+                       <Row>
+                         <Col s={4}>
+                     {`${comment.user.username}:`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={12}>
+                      {`${comment.comment}`}
+                         </Col>
+                       </Row>
+                       <Row>
+                         <Col s={6} className='offset-s7'>
+                         {`${new Date(comment.createdAt).toString().slice(0, 15)} at ${new Date(comment.createdAt).toLocaleTimeString()} `}
+                         </Col>
+                       </Row>
+                     </CardPanel>
+                     </CollectionItem>
+                 })}
+                </Collection>
+      </div>
       </Col>
     </Row>
   </div>
 )
 
 export default BookClubView;
-
-
