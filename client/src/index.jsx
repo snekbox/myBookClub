@@ -29,13 +29,8 @@ class Landing extends React.Component {
       bookSearchInput: '', // handles book search input when creating group
       bookSearchChoice: null,
       createBookClubName: null,
-      user: {
-        id: 1,
-        username: 'Mark Maher',
-        email: 'tenkin@gmail.com',
-        createdAt: '2019-04-11T19:26:30.000Z',
-        updatedAt: '2019-04-11T19:26:30.000Z',
-      },
+      user: null,
+      token: '',
     };
 
     this.renderMain = this.renderMain.bind(this);
@@ -53,10 +48,19 @@ class Landing extends React.Component {
     this.handleClubSearch = this.handleClubSearch.bind(this);
     this.joinGroup = this.joinGroup.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
+    this.leaveGroup = this.leaveGroup.bind(this);
   }
 
   componentDidMount() {
-    // Initial loading logic will go here
+    let username = localStorage.getItem('username');
+    let email = localStorage.getItem('email');
+    let userId = localStorage.getItem('userId');
+    let token = localStorage.getItem('token');
+    let googleId = localStorage.getItem('googleId');
+    if (token) {
+      this.setState({user: {username: username, email: email, id: userId, googleId: googleId}, loggedIn: true, token: token})
+      this.getGroups(userId)
+    }
   }
 
   getGroups(userId) {
@@ -96,7 +100,6 @@ class Landing extends React.Component {
       })
       .then(result => {
         const searchResults = result.data;
-        console.log(result);
         this.setState({
           groupSearchResults: searchResults,
         });
@@ -130,7 +133,7 @@ class Landing extends React.Component {
   deleteGroup (groupId) {
     const { user } = this.state;
     axios.patch('/groups/delete', {
-      groupId
+      groupId,
     })
     .then(() => {
       this.getGroups(user.id);
@@ -140,9 +143,57 @@ class Landing extends React.Component {
     });
   }
 
-  handleLogIn() {
-    this.getGroups(this.state.user.id);
-    this.setState({ loggedIn: true });
+  leaveGroup (groupId) {
+    const { user } = this.state;
+    axios.patch('/groups/removeUser', {
+      groupId,
+      userId: user.Id,
+    })
+    .then(() => {
+      this.getGroups(user.id);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  }
+
+  handleLogIn(response) {
+    // console.log(response);
+    // const tokenBlob = new Blob(
+    //   [JSON.stringify({ access_token: response.accessToken }, null, 2)],
+    //   { type: 'application/json' },
+    // );
+    // console.log(tokenBlob);
+    // const options = {
+    //   body: response,
+    //   mode: 'cors',
+    //   cache: 'default',
+    // };
+    // axios.post('/connect', options).then(r => {
+    //   const token = r.headers.get('x-auth-token');
+    //   r.json().then(user => {
+    //     if (token) {
+    //       this.setState({ loggedIn: true, user, token });
+    //     }
+    //   });
+    // });
+    axios
+      .post('/connect', {
+        access_token: response.accessToken,
+        profile: response.profileObj,
+      })
+      .then(result => {
+        let username = localStorage.setItem('username', result.data.username);
+        let email = localStorage.setItem('email', result.data.email);
+        let userId = localStorage.setItem('userId', result.data.id);
+        let token = localStorage.setItem('token', result.data.token);
+        let googleId = localStorage.setItem('googleId', result.data.googleId);
+        this.setState({ loggedIn: true, user: result.data });
+        return result.data
+      }).then(result => {
+        this.getGroups(this.state.user.id);
+      })
+      .catch(err => {});
   }
 
   bookSearch(bookSearchQuery) {
@@ -159,7 +210,7 @@ class Landing extends React.Component {
         });
       })
       .catch(err => {
-        console.log(
+        console.error(
           err,
           'server responded with error: could not complete bookSearch request',
         );
@@ -222,7 +273,7 @@ class Landing extends React.Component {
             this.getGroups(user.id)                                     //to reflect newly added bookClub
           })
           .catch(err => {
-            console.log('club NOT added to database', err);
+            console.error('club NOT added to database', err);
           });
       });
   }
@@ -248,6 +299,7 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
+      user,
     } = this.state;
     if (view === 'groups') {
       return (
@@ -262,6 +314,8 @@ class Landing extends React.Component {
       return <Settings 
         clubs={bookClubs}
         deleteGroup={this.deleteGroup}
+        leaveGroup={this.leaveGroup}
+        userId={user.id}
       />;
     } else if (view === 'club view') {
       return <BookClubView club={currentClub} book={currentBook} />;
@@ -306,6 +360,30 @@ class Landing extends React.Component {
         </div>
       );
     }
+    return (
+      <div>
+        <LeftBar
+          book={bookClubs.length ? bookClubs[0].book : {}}
+          club={bookClubs[0]}
+        />
+        <TopBar
+          chooseView={this.chooseView}
+          groupSearchResults={groupSearchResults}
+          groupSearchQuery={groupSearchQuery}
+          handleClubSearch={this.handleClubSearch}
+          searchClubs={this.searchClubs}
+          joinGroup={this.joinGroup}
+          handleBookSearchInput={this.handleBookSearchInput}
+          handleBookSearchSubmit={this.handleBookSearchSubmit}
+          selectBook={this.selectBook}
+          handleCreateBookClubName={this.handleCreateBookClubName}
+          addBookClub={this.addBookClub}
+          bookSearchResults={bookSearchResults}
+          bookSearchInput={bookSearchInput}
+        />
+        {this.renderMain()}
+      </div>
+    );
   }
 }
 

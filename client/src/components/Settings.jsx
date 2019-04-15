@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Icon, Button, Card } from 'react-materialize';
 
-const Settings = ({ clubs, deleteGroup }) => {
+const Settings = ({ clubs, deleteGroup, leaveGroup, userId }) => {
   if (clubs.length) {
     return (
       <div className="bodygrid cyan lighten-5">
@@ -15,6 +15,7 @@ const Settings = ({ clubs, deleteGroup }) => {
                 <Row key={club.id}>
                   <Col s={8}>{club.name}</Col>
                   <Col s={2}>
+                    {club.userId == userId ?
                     <Button
                       onClick={() => deleteGroup(club.id)}
                       floating
@@ -25,10 +26,17 @@ const Settings = ({ clubs, deleteGroup }) => {
                       tooltip="Delete group"
                       tooltipOptions={{ position: 'left' }}
                     />
+                    :<Button
+                      disabled
+                      floating
+                      icon="delete"
+                      style={{ marginTop: 'auto' }}
+                    />
+                  }
                   </Col>
                   <Col s={2}>
                     <Button
-                      onClick={() => deleteGroup(club.id)}
+                      // onClick={() => leaveGroup(club.id)}   // This needs fixing.
                       floating
                       className="teal"
                       style={{ marginTop: 'auto' }}

@@ -13,10 +13,22 @@ const {
 // Check or Add new user to the database.
 // Then, retrieve all group data for that user
 
-const verifyUser = (email, username) => {
+const verifyUser = (token, tokenSecret, profile) => {
   return User.findOrCreate({
-    where: { email },
-    defaults: { username },
+    where: { googleId: profile.id },
+    defaults: {
+      username: profile.displayName,
+      email: profile.emails[0].value,
+      token: token,
+    },
+  }).then(result => {
+    return result;
+  });
+};
+
+const deseralizeUser = (id) => {
+  return User.findOne({
+    where: { id: id }
   }).then(result => {
     return result;
   });
@@ -203,10 +215,7 @@ const searchGroups = query => {
         [Op.like]: `%${query}%`,
       },
     },
-    include: [
-      { model: User },
-      { model: Book }
-    ],
+    include: [{ model: User }, { model: Book }],
   })
     .then(result => {
       return result;
@@ -220,14 +229,15 @@ const deleteGroup = groupId => {
   return Group.destroy({
     where: {
       id: groupId,
-    }
+    },
   })
-  .then((result) => {
-    return result;
-  }).catch((err) => {
-    return err;
-  });
-}
+    .then(result => {
+      return result;
+    })
+    .catch(err => {
+      return err;
+    });
+};
 
 const removeUserFromGroup = (userId, groupId) => {
   return UserGroup.destroy({
@@ -258,4 +268,5 @@ module.exports = {
   searchGroups,
   deleteGroup,
   removeUserFromGroup,
+  deseralizeUser,
 };

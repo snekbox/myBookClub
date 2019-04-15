@@ -12,7 +12,7 @@ const BodyGrid = ({ chooseView, chooseClub, clubs }) => {
               s={12}
               m={12}
               l={6}
-              xl={3}
+              xl={4}
               onClick={() => {
                 chooseView('club view');
                 chooseClub(club, club.book);
