@@ -57,6 +57,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
+    "jsdoc": "^3.5.5",
     "prettier": "^1.16.4",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
