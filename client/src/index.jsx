@@ -82,6 +82,12 @@ class Landing extends React.Component {
     }
   }
 
+  /** 
+   * @function getGroups
+  * Changes state to render book clubs that user is a part of.
+  * @async
+  * @param {string} userId - The Id of a user stored in the database.
+  */
   getGroups(userId) {
     axios
       .get('/groups', {
@@ -98,7 +104,11 @@ class Landing extends React.Component {
         console.error(err);
       });
   }
-
+ /** 
+  * @function getAllGroups
+  * Changes state to render all book clubs in database.
+  * @async
+  */
   getAllGroups() {
     axios
       .get('/groups/search', {
@@ -121,16 +131,33 @@ class Landing extends React.Component {
       });
   }
 
+   /** 
+    * @function logout
+  * Rids the local storage of all info, including user's session. This redirects user to login page.
+  */
   logout() {
     localStorage.clear();
     this.setState({ loggedIn: false });
     axios.get('/logout')
   }
 
+   /** 
+    * @function chooseView
+  * Changes state to render chosen component.
+  * @param {any} view - The JSX component that is to be rendered on the page. State is set to this component.
+  */
   chooseView(view) {
     this.setState({ view });
   }
 
+   /** 
+  * @function chooseClub club information when user chooses club, to render chosen club.
+  * @async
+  * 
+  * @param {object} club - The club current club to retrieve club information from, including users, for the purpose of rendering club interface.
+  * @param {object} book - The current book a club is reading, and discussing. For use in rendering club interface.
+  * Sends axios call to server, then in turn, to database to retrieve club information.
+  */
   chooseClub(club, book) {
     axios
       .get('/users', {
@@ -149,7 +176,12 @@ class Landing extends React.Component {
         console.error(err);
       });
   }
-
+/**
+ * @function searchClubs
+ * @async
+ * Sends get request to database, for club lookup
+ * @param {*} query name of club to search for
+ */
   searchClubs(query) {
     axios
       .get('/groups/search', {
@@ -168,12 +200,23 @@ class Landing extends React.Component {
       });
   }
 
+  /**
+   * @function handleClubSearch
+   * changes stately variable groupSearchQuery to reflect club search
+   * 
+   * @param {string} q event handler that responds to changes in a text box
+   */
   handleClubSearch(q) {
     this.setState({
       groupSearchQuery: q,
     });
   }
 
+  /**
+   * @function joinGroup
+   * @async
+   * @param {*} groupId takes a number representing a group's Id, sends
+   */
   joinGroup(groupId) {
     const { user } = this.state;
     axios
@@ -188,7 +231,13 @@ class Landing extends React.Component {
         console.error(err);
       });
   }
-
+/**
+ * @function deleteGroup
+ * takes in a group Id, drops info from database pertaining to group with this ID
+ * @async
+ * @param {*} groupId group's ID to delete
+ * user cannot delete groups that they do not own/did not create
+ */
   deleteGroup(groupId) {
     const { user } = this.state;
     axios
@@ -202,7 +251,12 @@ class Landing extends React.Component {
         console.error(err);
       });
   }
-
+/**
+ * @function leaveGroup
+ * takes in a group's ID, current user who is logged in has ID destructured from state,
+ * and their references to group (groupId) argument are deleted from database.
+ * @param {groupId} groupId 
+ */
   leaveGroup(groupId) {
     const { user } = this.state;
     axios
@@ -218,6 +272,12 @@ class Landing extends React.Component {
       });
   }
 
+  /**
+   * @function handleLogIn
+   * allows users to view landing page, stores some of their data including accesstoken and some user info
+   * @async
+   * @param {*} response info from google that allows users info to be stored in database, allows sessions to be created
+   */
   handleLogIn(response) {
     axios
       .post('/connect', {
@@ -238,9 +298,15 @@ class Landing extends React.Component {
       })
       .catch(err => {});
   }
+  /**
+   * @function bookSearch
+   * sends get request to api for books matching search query when creating a group
+   * @async
+   * @param {bookSearchQuery} bookSearchQuery string that is sent as query to api, returns results as stately variables 
+   * for use in book club creation/adding books to club
+   *  */ 
 
   bookSearch(bookSearchQuery) {
-    // sends get request to api for books matching search query when creating a group
     return axios
       .get('/books/googleapi', {
         params: {
@@ -259,19 +325,32 @@ class Landing extends React.Component {
         );
       });
   }
+  /**
+   * @function handleBookSearchInput
+   * handles input in book search text area, allows for user to add what they type to the state,
+   * and search by sending this text as query to api when handleBookSearchSubmit is clicked. This info is what's sent.
+   * @param {*} e //event with text as target
+   */
   handleBookSearchInput(e) {
-    // possible throttling of api calls here, when a few letters have been input
-    // to help users pick books before they finish typing an entire book name
     this.setState({
       bookSearchInput: e.target.value,
     });
   }
 
-  // responds to user clicking search button
+  /**
+   * @function handleBookSearchSubmit
+   * responds to user clicking search button
+   * calls bookSearch on button click, on bookSearchInput
+   */ 
   handleBookSearchSubmit() {
     this.bookSearch(this.state.bookSearchInput);
   }
-
+/**
+ * @function addBookClub
+ * allows user to select book, input a book club name, and create a club. 
+ * This club is then rendered, once it's been added to the database.
+ * User who created club is owner, and has ability to delete club.
+ */
   addBookClub() {
     const { bookSearchChoice, createBookClubName, user } = this.state;
     // console.log(bookSearchChoice)
@@ -320,20 +399,37 @@ class Landing extends React.Component {
       });
   }
 
-  // function selects currentBook when creating a new group
+  /**
+   * @function selectBook
+   * selects currentBook when creating a new group
+   *@param {book} book object containing info about a book, selecting book sets specific book 
+   * to bookSearchChoice for use in group creation- when a book club is created, it needs a book to discuss. 
+   * 
+   */ 
   selectBook(book) {
     this.setState({
       bookSearchChoice: book,
     });
   }
-
-  // function sets createBookClubName to input text when creating a new group
+/**
+ * @function handleCreateBookClubName
+ *  sets createBookClubName stately variable to input text when creating a new group
+ * @param {*} e text input, handled on change
+ */
+  // 
   handleCreateBookClubName(e) {
     this.setState({
       createBookClubName: e.target.value,
     });
   }
 
+  /**
+   * @function addBookToGroup
+   * adds a book to a group with the given group ID
+   * @async updates state when finished
+   * @param {*} groupId group to add book info to
+   * @param {*} book book info to add to group
+   */
   addBookToGroup (groupId, book) {
     const bookQuery = {
       author: book.volumeInfo.authors.join(', '),
@@ -370,14 +466,27 @@ class Landing extends React.Component {
       });
   }
 
-  handleCommentText (text) { //handles individual comment's text
+  /**
+   * @function handleCommentText
+   * handles individual comment's text input, on change, by altering state
+   * @param {any string} text 
+   */
+
+  handleCommentText (text) { 
     this.setState({
       clubBookComment: text.target.value,
     })
   }
 
+/**
+ * @function submitComment
+ * function for adding comments to database, deconstructs state to produce
+ * input comment, user's ID, group's ID, current book's ID
+ * @async
+ * sets state when server responds to reflect all comments on current group
+ */
+
   submitComment () {
-    //add comment to database(?) 
     const {clubBookComment, user, currentBook, currentClub} = this.state;
     const comment = {
         commentText: clubBookComment,
@@ -393,13 +502,23 @@ class Landing extends React.Component {
     })
     .then((currentClubComments)=>{
       this.setState({
-        clubBookComments: currentClubComments.data, //all comments on current group
+        clubBookComments: currentClubComments.data, 
       });
     })
     .catch((err)=>{
       console.error('did not add comment')
     })
   }
+
+
+/**
+ * @function getGroupComments
+ * sends get request to server, to query the database for all comments associated with a club and book.
+ * @param {*} group for purpose of using the group's id to query db
+ * @param {*} book for purpose of using the book's id to query db
+ * 
+ * sets clubBookComments to all comments for this given group/book
+ */
 
   getGroupComments (group, book) {
     axios.get('/groups/comments', {
@@ -416,7 +535,7 @@ class Landing extends React.Component {
     .catch((err)=>{
       console.error('unable to retrieve books from this group, server responded with error')
     })
-  } //sets clubBookComments to all comments for this given group/book
+  } 
 
 
   renderMain() {
@@ -426,8 +545,8 @@ class Landing extends React.Component {
       sampleData,
       currentBook,
       currentClub,
-      clubBookComments, //all comments in a book club
-      clubBookComment,  //individual comment being added
+      clubBookComments, 
+      clubBookComment,  
       currentClubUsers,
       user,
       bookSearchChoice,
@@ -481,7 +600,7 @@ class Landing extends React.Component {
       bookSearchResults,
       autocompleteObject,
       bookSearchChoice,
-    } = this.state; // destructure state here
+    } = this.state; 
 
     if (!loggedIn) {
       return <LogIn handleLogIn={this.handleLogIn} />;
