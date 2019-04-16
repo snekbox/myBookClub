@@ -12,7 +12,14 @@ const {
 
 // Check or Add new user to the database.
 // Then, retrieve all group data for that user
-
+/**
+ * @function verifyUser
+ * adds user to sessions table
+ * 
+ * @param {*} token security token
+ * @param {*} tokenSecret 
+ * @param {*} profile user id
+ */
 const verifyUser = (token, tokenSecret, profile) => {
   return User.findOrCreate({
     where: { googleId: profile.id },
@@ -26,6 +33,13 @@ const verifyUser = (token, tokenSecret, profile) => {
   });
 };
 
+/**
+ * @function deseralizeUser
+ * for token deserialization to user object
+ * 
+ * @param {*} id 
+ */
+
 const deseralizeUser = (id) => {
   return User.findOne({
     where: { id: id }
@@ -33,6 +47,12 @@ const deseralizeUser = (id) => {
     return result;
   });
 };
+
+/**
+ * @function getOwnerGroups
+ * takes in a userId, returns all groups that are owned by the user passed to function
+ * @param {*} userId 
+ */
 
 const getOwnerGroups = userId => {
   return Group.findAll({
@@ -49,6 +69,15 @@ const getOwnerGroups = userId => {
     });
 };
 
+/**
+ * @function createNewGroup
+ * adds new group to groups table
+ * 
+ * @param {*} userId userId to serve as owner of new group
+ * @param {*} groupName groupName to serve as new group name
+ * @param {*} bookId bookId is current book that group is reading
+ */
+
 const createNewGroup = (userId, groupName, bookId) => {
   return Group.create({
     name: groupName,
@@ -63,6 +92,20 @@ const createNewGroup = (userId, groupName, bookId) => {
     });
 };
 
+/**
+ * @function addOrFindBook
+ * takes in book information, returns book's info from database.
+ * If book does not exist in database, adds it.
+ * 
+ * book info:
+ * @param {*} isbn 
+ * @param {*} title 
+ * @param {*} author 
+ * @param {*} published 
+ * @param {*} description 
+ * @param {*} urlInfo 
+ * @param {*} image 
+ */
 const addOrFindBook = (
   isbn,
   title,
@@ -91,6 +134,12 @@ const addOrFindBook = (
     });
 };
 
+/**
+ * @function getUserGroups
+ * gets all groups that user is a member of
+ * 
+ * @param {*} userId 
+ */
 const getUserGroups = userId => {
   return UserGroup.findAll({
     attributes: [],
@@ -115,6 +164,13 @@ const getUserGroups = userId => {
     });
 };
 
+/**
+ * @function addUserToGroup
+ * takes in a userId, and a groupId, adds this user to group table
+ * 
+ * @param {*} userId 
+ * @param {*} groupId 
+ */
 const addUserToGroup = (userId, groupId) => {
   return UserGroup.findOrCreate({
     where: { userId, groupId },
@@ -127,6 +183,12 @@ const addUserToGroup = (userId, groupId) => {
     });
 };
 
+/**
+ * @function getGroupUsers
+ * gets all users from group with ID matching groupId
+ * 
+ * @param {*} groupId 
+ */
 const getGroupUsers = groupId => {
   return UserGroup.findAll({
     attributes: [],
@@ -146,6 +208,13 @@ const getGroupUsers = groupId => {
     });
 };
 
+/**
+ * @function addBookToGroup
+ * takes in a groupId and a bookId, adds bookId to group table
+ * 
+ * @param {*} groupId 
+ * @param {*} bookId 
+ */
 const addBookToGroup = (groupId, bookId) => {
   return BookGroup.findOrCreate({
     where: { bookId, groupId },
@@ -176,6 +245,12 @@ const addBookToGroup = (groupId, bookId) => {
     });
 };
 
+/**
+ * @function getGroupBooks
+ * takes in a groupId and returns all books from group matching groupId
+ * 
+ * @param {*} groupId 
+ */
 const getGroupBooks = groupId => {
   return BookGroup.findAll({
     attributes: [],
@@ -195,6 +270,16 @@ const getGroupBooks = groupId => {
     });
 };
 
+/**
+ * @function addComment
+ * takes in userId, groupId, bookId, and a comment 
+ * adds input to comments table
+ * 
+ * @param {*} userId 
+ * @param {*} groupId 
+ * @param {*} bookId 
+ * @param {*} comment 
+ */
 const addComment = (userId, groupId, bookId, comment) => {
   return Comment.create({
     comment,
@@ -210,6 +295,13 @@ const addComment = (userId, groupId, bookId, comment) => {
     });
 };
 
+/**
+ * @function getAllComments
+ * groupId and bookId, gets all of specified group's comments on specified book
+ * 
+ * @param {*} groupId 
+ * @param {*} bookId 
+ */
 const getAllComments = (groupId, bookId) => {
   return Comment.findAll({
     where: {
@@ -225,6 +317,12 @@ const getAllComments = (groupId, bookId) => {
       return err;
     });
 };
+
+/**
+ * @function searchGroups
+ * returns group that matches group query, for use in group search functions
+ * @param {*} query 
+ */
 
 const searchGroups = query => {
   return Group.findAll({
@@ -243,6 +341,12 @@ const searchGroups = query => {
     });
 };
 
+/**
+ * @function deleteGroup
+ * takes in groupId, removes specified group from groups table
+ * 
+ * @param {*} groupId 
+ */
 const deleteGroup = groupId => {
   return Group.destroy({
     where: {
@@ -257,6 +361,12 @@ const deleteGroup = groupId => {
     });
 };
 
+/**
+ * @function removeUserFromGroup
+ * takes in userId and groupId, removes user reference from group table
+ * @param {*} userId 
+ * @param {*} groupId 
+ */
 const removeUserFromGroup = (userId, groupId) => {
   return UserGroup.destroy({
     where: {
