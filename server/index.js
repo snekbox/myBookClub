@@ -55,15 +55,27 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(passport.initialize());
 app.use(passport.session());
 
+/**
+ * Serializes the user by id to encode a token
+ */
+
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
+
+/**
+ * Deserializes the user by id to decode token
+ */
 
 passport.deserializeUser(function(id, done) {
   deseralizeUser(id, function(err, user) {
     done(err, user);
   });
 });
+
+/**
+ * 
+ */
 
 app.post('/connect', passport.authenticate('google-token'),
   function(req, res) {
@@ -73,13 +85,17 @@ app.post('/connect', passport.authenticate('google-token'),
   });  
 });
 
+/**
+ * Queries the google books API and returns a promise which resolves to an array of book objects.
+ */
+
 app.get('/books/googleapi', (req, res)=>{
   const {query} = req.query
   axios.get('https://www.googleapis.com/books/v1/volumes', {
     params: {
       'q': query,
       'country': 'US',
-      'maxResults': 2,
+      'maxResults': 2, // Increase this to get more results. Keep it low for testing to limit API calls
     },
     headers:{
       'key': process.env.GOOGLE_BOOKS_API_KEY,
@@ -95,6 +111,11 @@ app.get('/books/googleapi', (req, res)=>{
     res.json(err);
   })
 })
+
+/**
+ * Sends the parsed book data, formatted to schema specs, to the database to be stored in Books model
+ * instead of wasting API calls.
+ */
   
 app.post('/books/googleapi', (req, res) => {
   const {
@@ -114,6 +135,10 @@ app.post('/books/googleapi', (req, res) => {
     });
 });
 
+/**
+ * Queries the database for all users which belong to a group. Returns a promise that resolves to an array.
+ */
+
 app.get('/users', (req, res) => {
   const { groupId } = req.query;
   getGroupUsers(groupId)
@@ -124,6 +149,10 @@ app.get('/users', (req, res) => {
       console.error(err);
     });
 });
+
+/**
+ * Queries the database for all groups to which a user belongs. Returns a promise that resolves to an array.
+ */
 
 app.get('/groups', (req, res) => {
   const { userId } = req.query;
@@ -136,6 +165,10 @@ app.get('/groups', (req, res) => {
     });
 });
 
+/**
+ * Queries the database for all groups which contain the query in their name. Returns a promise that resolves to an array.
+ */
+
 app.get('/groups/search', (req, res) => {
   const { query } = req.query;
   searchGroups(query)
@@ -146,6 +179,10 @@ app.get('/groups/search', (req, res) => {
       console.error(err);
     });
 });
+
+/**
+ * Updates a group in database to add a user.
+ */
 
 app.patch('/groups', (req, res) => {
   const { userId, groupId } = req.body;
@@ -158,6 +195,10 @@ app.patch('/groups', (req, res) => {
     });
 });
 
+/**
+ * Deletes a group from the database. Also deletes all references to that group in join tables.
+ */
+
 app.patch('/groups/delete', (req, res) => {
   const { groupId } = req.body;
   deleteGroup(groupId)
@@ -168,6 +209,10 @@ app.patch('/groups/delete', (req, res) => {
   });
 })
 
+/**
+ * Supposed to remove a user from a group. Doesn't work. TODO.
+ */
+
 app.patch('/groups/removeUser', (req, res) => {
   const { userId, groupId } = req.body;
   removeUserFromGroup(userId, groupId)
@@ -177,6 +222,10 @@ app.patch('/groups/removeUser', (req, res) => {
     console.error(err);
   });
 })
+
+/**
+ * Creates a new group in the database. Returns a promise that resolves to a group object.
+ */
 
 app.post('/groups', (req, res) => {
   const { userId, groupName, bookId } = req.body.data;
@@ -197,6 +246,10 @@ app.post('/groups', (req, res) => {
     });
 });
 
+/**
+ * Adds a book from the database to an existing group. Returns a promise that resolves to a group object.
+ */
+
 app.patch('/groups/book', (req, res) => {
   const { groupId, bookId } = req.body;
   return addBookToGroup(groupId, bookId)
@@ -206,7 +259,12 @@ app.patch('/groups/book', (req, res) => {
     .catch(err => {
       console.error(err);
     });
-});
+})
+
+/**
+ * Creates a user in the database or returns the user associated with the current urse's email.
+ * Returns a promise that resolves to a user object.
+ */
 
 app.post('/login', (req, res) => {
   console.log(req.body, 'post to login')
@@ -220,6 +278,11 @@ app.post('/login', (req, res) => {
       console.error(err);
     });
 });
+
+/**
+ * Adds a comment to a specific group on a specific book.
+ * Returns a promise that resolves to an array of comment objects.
+ */
 
 app.post('/groups/comments', (req, res)=>{
   //adds comment to specific group's comment section
@@ -240,6 +303,10 @@ app.post('/groups/comments', (req, res)=>{
     })
 })
 
+/**
+ * Queries the database for all comments from a group. Returns a promise that resolves to an array of comment objects.
+ */
+
 app.get('/groups/comments', (req, res)=>{
   const {groupId, bookId} = req.query;
   getAllComments(groupId, bookId)
@@ -250,6 +317,10 @@ app.get('/groups/comments', (req, res)=>{
     console.log(err, 'error, db was unable to retrieve comments')
   })
 })
+
+/**
+ * Used for testing. Returns sample Google book API data.
+ */
 
 app.get('/test', (req, res) => {
   res.json(googleBooksApiData); // sending back book data for book club creation test
@@ -262,6 +333,10 @@ app.get('/test', (req, res) => {
   // Description:   json.items[i].volumeInfo.description
   // ISBN:          json.items[i].volumeInfo.industryIdentifiers.filter(id => id.type === 'ISBN_13')[0].identifier
 })
+
+/**
+ * Logs the current user out.
+ */
 
 app.get('/logout', function (req, res){
   req.session.destroy(function (err) {
